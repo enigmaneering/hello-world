@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: FreestyleScript-Regular, 'Freestyle Script';
+        font-size: 21px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #4d4d4d;
+      }
+
+      .cls-3 {
+        fill: #999;
+      }
+
+      .cls-3, .cls-4 {
+        stroke: #4d4d4d;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        fill: none;
+        stroke-linecap: round;
+      }
+    </style>
+  </defs>
+  <circle class="cls-3" cx="40.26" cy="26.31" r="7.2"/>
+  <text class="cls-1" transform="translate(33.06 73.94) rotate(-7.89)"><tspan x="0" y="0">impulse</tspan></text>
+  <g>
+    <path class="cls-4" d="M48.29,60.67c-4.47-15.03,19.95-18.92,3.05-30.01"/>
+    <path class="cls-2" d="M56.34,30.71c0,.17-.15.29-.31.29l-4.58-.22,1.74,4.25c.06.15-.01.33-.16.39-.15.06-.33-.01-.39-.16l-1.92-4.68c-.04-.09-.03-.2.03-.29s.16-.13.26-.13l5.06.24c.06,0,.11.02.16.05.08.06.13.15.13.26Z"/>
+  </g>
+</svg>

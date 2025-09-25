@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 390.33 237.22">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5 {
+        fill: none;
+      }
+
+      .cls-6 {
+        font-size: 27px;
+      }
+
+      .cls-6, .cls-7, .cls-8 {
+        font-family: FreestyleScript-Regular, 'Freestyle Script';
+      }
+
+      .cls-6, .cls-7, .cls-8, .cls-9, .cls-10 {
+        fill: #4d4d4d;
+      }
+
+      .cls-7 {
+        font-size: 21px;
+      }
+
+      .cls-8 {
+        font-size: 15px;
+      }
+
+      .cls-11 {
+        fill: gray;
+      }
+
+      .cls-9 {
+        font-size: 11px;
+      }
+
+      .cls-12, .cls-2, .cls-3, .cls-13, .cls-4, .cls-5 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-12, .cls-2, .cls-3, .cls-13, .cls-5 {
+        stroke: #4d4d4d;
+      }
+
+      .cls-12, .cls-13, .cls-14 {
+        fill: #999;
+      }
+
+      .cls-15 {
+        fill: #ccc;
+      }
+
+      .cls-2 {
+        filter: url(#drop-shadow-5);
+        stroke-width: 3px;
+      }
+
+      .cls-2, .cls-4, .cls-5 {
+        stroke-linecap: round;
+      }
+
+      .cls-13, .cls-16 {
+        opacity: .22;
+      }
+
+      .cls-4 {
+        stroke: #ccc;
+        stroke-dasharray: 5;
+      }
+
+      .cls-17 {
+        clip-path: url(#clippath);
+      }
+    </style>
+    <symbol id="Executing" viewBox="0 0 138.88 24.31">
+      <g>
+        <g>
+          <rect class="cls-14" x=".5" y=".5" width="137.88" height="23.31" rx="3" ry="3"/>
+          <rect class="cls-3" x=".5" y=".5" width="137.88" height="23.31" rx="3" ry="3"/>
+        </g>
+        <polygon class="cls-11" points="42.94 2.41 33.48 2.41 14.28 21.85 23.74 21.85 42.94 2.41"/>
+        <polygon class="cls-11" points="61.01 2.41 51.55 2.41 32.35 21.85 41.81 21.85 61.01 2.41"/>
+        <polygon class="cls-11" points="79.08 2.41 69.62 2.41 50.42 21.85 59.88 21.85 79.08 2.41"/>
+        <polygon class="cls-11" points="97.15 2.41 87.69 2.41 68.49 21.85 77.95 21.85 97.15 2.41"/>
+        <polygon class="cls-11" points="115.22 2.41 105.76 2.41 86.56 21.85 96.02 21.85 115.22 2.41"/>
+        <polygon class="cls-11" points="133.29 2.41 123.83 2.41 104.63 21.85 114.09 21.85 133.29 2.41"/>
+        <path class="cls-11" d="M24.87,2.41h-9.46L1.94,16.05v3.61c0,.96.55,1.78,1.34,2.2h2.39L24.87,2.41Z"/>
+        <polygon class="cls-11" points="122.7 21.85 132.16 21.85 136.94 17.01 136.94 7.43 122.7 21.85"/>
+        <path class="cls-11" d="M6.8,2.41h-3.43c-.84.4-1.42,1.25-1.42,2.25v2.67L6.8,2.41Z"/>
+      </g>
+    </symbol>
+    <filter id="drop-shadow-5" x="32" y="159.55" width="359" height="34" filterUnits="userSpaceOnUse">
+      <feOffset dx="7" dy="7"/>
+      <feGaussianBlur result="blur" stdDeviation="5"/>
+      <feFlood flood-color="#000" flood-opacity=".07"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <clipPath id="clippath">
+      <rect class="cls-1" x="203.54" y="97.92" width="132.85" height="61.46"/>
+    </clipPath>
+  </defs>
+  <text class="cls-8" transform="translate(34.6 194.44)"><tspan x="0" y="0">42</tspan></text>
+  <text class="cls-8" transform="translate(165.94 194.44)"><tspan x="0" y="0">43</tspan></text>
+  <text class="cls-8" transform="translate(277.75 194.44)"><tspan x="0" y="0">44</tspan></text>
+  <line class="cls-2" x1="41.8" y1="169.92" x2="367.1" y2="169.92"/>
+  <line class="cls-4" x1="41.8" y1="108.27" x2="41.8" y2="169.92"/>
+  <line class="cls-4" x1="173.14" y1="108.27" x2="173.14" y2="169.92"/>
+  <line class="cls-4" x1="284.95" y1="108.27" x2="284.95" y2="169.92"/>
+  <circle class="cls-12" cx="41.8" cy="169.92" r="7.2"/>
+  <circle class="cls-12" cx="173.14" cy="169.92" r="7.2"/>
+  <circle class="cls-12" cx="284.95" cy="169.92" r="7.2"/>
+  <path class="cls-15" d="M367.1,147.98c.28,0,.5-.22.5-.5s-.22-.5-.5-.5H23.24c-.28,0-.5.22-.5.5s.22.5.5.5h343.86"/>
+  <path class="cls-15" d="M367.1,120c.28,0,.5-.22.5-.5s-.22-.5-.5-.5H23.24c-.28,0-.5.22-.5.5s.22.5.5.5h343.86"/>
+  <g>
+    <text class="cls-7" transform="translate(160.57 217.3)"><tspan x="0" y="0">time</tspan></text>
+    <g>
+      <path class="cls-5" d="M183.83,212.79c10.97-1.12,25.31,4.32,45.21,2.57"/>
+      <path class="cls-10" d="M225.11,218.43c-.1-.13-.07-.32.07-.42l3.73-2.68-4-2.25c-.14-.08-.2-.26-.11-.41.08-.14.27-.19.41-.11l4.41,2.48c.09.05.15.14.15.25,0,.1-.04.2-.12.26l-4.11,2.95s-.1.05-.16.06c-.1,0-.2-.04-.26-.12Z"/>
+    </g>
+  </g>
+  <text class="cls-6" transform="translate(39.92 30.86) rotate(5.77)"><tspan x="0" y="0">“ blocking activation”</tspan></text>
+  <g>
+    <g class="cls-16">
+      <line class="cls-4" x1="97.38" y1="108.27" x2="97.38" y2="161.15"/>
+    </g>
+    <g class="cls-16">
+      <line class="cls-4" x1="151.6" y1="108.27" x2="151.6" y2="161.15"/>
+    </g>
+    <g class="cls-16">
+      <line class="cls-4" x1="205.81" y1="108.27" x2="205.81" y2="161.15"/>
+    </g>
+    <g class="cls-16">
+      <line class="cls-4" x1="260.02" y1="108.27" x2="260.02" y2="161.15"/>
+    </g>
+    <g class="cls-16">
+      <line class="cls-4" x1="314.23" y1="108.27" x2="314.23" y2="161.15"/>
+    </g>
+  </g>
+  <circle class="cls-13" cx="97.38" cy="169.92" r="7.2"/>
+  <circle class="cls-13" cx="151.6" cy="169.92" r="7.2"/>
+  <circle class="cls-13" cx="205.81" cy="169.92" r="7.2"/>
+  <circle class="cls-13" cx="260.05" cy="169.92" r="7.2"/>
+  <circle class="cls-13" cx="314.26" cy="169.92" r="7.2"/>
+  <g class="cls-17">
+    <use width="138.88" height="24.31" transform="translate(296.15 121.59)" xlink:href="#Executing"/>
+  </g>
+  <path class="cls-10" d="M344.64,90.67h-16.5l7.75,6.52v99.86c0,.28.22.5.5.5s.5-.22.5-.5v-99.86l7.75-6.52Z"/>
+  <text class="cls-7" transform="translate(112.6 94.68) rotate(-14.69)"><tspan x="0" y="0">stretching</tspan></text>
+  <line class="cls-5" x1="97.38" y1="91.02" x2="97.38" y2="105.88"/>
+  <line class="cls-5" x1="173.14" y1="91.02" x2="173.14" y2="105.88"/>
+  <g>
+    <path class="cls-5" d="M169.89,95c-9.9-1.55-47.31,4.49-69.44,2.96"/>
+    <path class="cls-10" d="M166.23,91.61c-.11.13-.09.32.03.42l3.49,2.99-4.18,1.9c-.15.07-.22.25-.15.4.07.15.25.22.4.15l4.61-2.09c.09-.04.16-.13.17-.23.01-.1-.02-.2-.1-.27l-3.84-3.29s-.1-.06-.15-.07c-.1-.01-.2.02-.27.1Z"/>
+    <path class="cls-10" d="M104.64,95.2c.08.14.04.33-.11.41l-3.95,2.34,3.79,2.59c.14.09.17.28.08.42-.09.14-.28.17-.42.08l-4.18-2.86c-.08-.06-.13-.16-.13-.26,0-.1.06-.2.15-.25l4.36-2.58c.05-.03.11-.04.16-.04.1,0,.19.06.25.15Z"/>
+  </g>
+  <text class="cls-7" transform="translate(102.6 84.1) rotate(-14.69)"><tspan x="0" y="0">impulse rate</tspan></text>
+  <g>
+    <rect class="cls-14" x="49" y="122.09" width="114.72" height="23.31" rx="3" ry="3"/>
+    <path class="cls-10" d="M164.22,142.9c0,1.65-1.35,3-3,3H51.5c-1.65,0-3-1.35-3-3v-18.31c0-1.65,1.35-3,3-3h109.72c1.65,0,3,1.35,3,3v18.31ZM49.5,141.9c0,1.65,1.35,3,3,3h107.72c1.65,0,3-1.35,3-3v-16.31c0-1.65-1.35-3-3-3H52.5c-1.65,0-3,1.35-3,3v16.31Z"/>
+    <g>
+      <rect class="cls-10" x="76.43" y="132.86" width="87.29" height="1"/>
+      <polygon class="cls-10" points="78.42 131.67 76.72 133.36 78.42 135.06 76.98 135.06 75.28 133.36 76.98 131.67 78.42 131.67"/>
+    </g>
+    <text class="cls-9" transform="translate(57.36 137.71)"><tspan x="0" y="0">42</tspan></text>
+  </g>
+  <g>
+    <rect class="cls-14" x="177.4" y="122.09" width="99.84" height="23.31" rx="3" ry="3"/>
+    <path class="cls-10" d="M277.73,142.9c0,1.65-1.35,3-3,3h-94.84c-1.65,0-3-1.35-3-3v-18.31c0-1.65,1.35-3,3-3h94.84c1.65,0,3,1.35,3,3v18.31ZM177.9,141.9c0,1.65,1.35,3,3,3h92.84c1.65,0,3-1.35,3-3v-16.31c0-1.65-1.35-3-3-3h-92.84c-1.65,0-3,1.35-3,3v16.31Z"/>
+    <g>
+      <rect class="cls-10" x="204.82" y="132.86" width="72.41" height="1"/>
+      <polygon class="cls-10" points="206.81 131.67 205.12 133.36 206.81 135.06 205.38 135.06 203.68 133.36 205.38 131.67 206.81 131.67"/>
+    </g>
+    <text class="cls-9" transform="translate(185.76 137.71)"><tspan x="0" y="0">43</tspan></text>
+  </g>
+</svg>
