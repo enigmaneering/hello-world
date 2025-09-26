@@ -123,4 +123,4 @@ but by changing just two lines of code we resolve the efficiency _and_ solve the
                                                                      new port ⬏
 
 Now, rather than fighting for a shared resource, each owns a specific network endpoint and cycles itself automatically!
-This lets things run a lot more much more "stably" - albiet absurdly so.
+This lets things run significantly more "stably" - albiet absurdly so.
