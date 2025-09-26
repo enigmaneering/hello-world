@@ -57,6 +57,8 @@ on creation through the optional final parameter
         c.Frequency = 1 //hz
     
         c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Print", Printer, nil, Cleanup)
+
+	    go core.Shutdown(time.Second * 3) // Delayed shutdown
     
         c.Spark()
         core.KeepAlive(time.Second * 5)
@@ -94,22 +96,24 @@ what's happening if we enable _verbose_ recording.
         "printPreamble": false // Defaults to true if omitted
     }
 ---
-    [core] created cortex 'Avivi Spurway'
+    [core] created cortex 'Deorsa Readshaw'
     [core] creating synapse 'Print'
-    [Avivi Spurway] sparking neural activity
-    [Avivi Spurway] wired axon to synapse 'Print'
-    [Avivi Spurway ⇝ Print] looping
-    [Avivi Spurway ⇝ Print] 1.002361541s
-    [Avivi Spurway ⇝ Print] 1.000157375s
+    [Deorsa Readshaw] sparking neural activity
+    [core] instance shutting down in 3s
+    [Deorsa Readshaw] wired axon to synapse 'Print'
+    [Deorsa Readshaw ⇝ Print] looping
+    [Deorsa Readshaw ⇝ Print] 1.003269s
+    [Deorsa Readshaw ⇝ Print] 999.879208ms
     
     [core] instance shutting down
     [core] running 2 deferrals
+    [Deorsa Readshaw ⇝ Print] 999.923583ms
     [core] holding open for 5s
-    [Avivi Spurway] cortex shutting down
-    [Avivi Spurway] decayed
-    [Avivi Spurway ⇝ Print] synapse cleaning up
-    [Avivi Spurway ⇝ Print] decayed
-    [Avivi Spurway] cortex shut down complete
+    [Deorsa Readshaw] cortex shutting down
+    [Deorsa Readshaw] decayed
+    [Deorsa Readshaw] cortex shut down complete
+    [Deorsa Readshaw ⇝ Print] cleaning up
+    [Deorsa Readshaw ⇝ Print] decayed
     [core] instance shut down complete
 
 Every cortex, by default, assigns its own cleanup deferral to core on creation.  By viewing the verbose logs, you

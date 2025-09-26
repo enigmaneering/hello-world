@@ -15,6 +15,8 @@ func main() {
 
 	c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Print", Printer, nil, Cleanup)
 
+	go core.Shutdown(time.Second * 3)
+
 	c.Spark()
 	core.KeepAlive(time.Second * 5)
 }
