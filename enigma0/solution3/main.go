@@ -10,6 +10,12 @@ import (
 	"git.ignitelabs.net/janos/core/sys/rec"
 )
 
+/*
+E0S3
+
+This demonstrates the four different lifecycles of synaptic activity.
+*/
+
 var cortex = std.NewCortex(std.RandomName())
 
 func main() {

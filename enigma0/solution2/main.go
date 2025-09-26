@@ -9,6 +9,12 @@ import (
 	"git.ignitelabs.net/janos/core/sys/rec"
 )
 
+/*
+E0S2
+
+This demonstrates how to clean up a neural endpoint
+*/
+
 func main() {
 	c := std.NewCortex(std.RandomName())
 	c.Frequency = 1 //hz
