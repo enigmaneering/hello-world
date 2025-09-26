@@ -63,7 +63,7 @@ on creation through the optional final parameter
     }
     
     func Cleanup(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "cleaning up\n")
+        rec.Printf(imp.Bridge, "synapse cleaning up\n")
     }
     
     func Printer(imp *std.Impulse) {
@@ -107,7 +107,7 @@ what's happening if we enable _verbose_ recording.
     [core] holding open for 5s
     [Avivi Spurway] cortex shutting down
     [Avivi Spurway] decayed
-    [Avivi Spurway ⇝ Print] cleaning up
+    [Avivi Spurway ⇝ Print] synapse cleaning up
     [Avivi Spurway ⇝ Print] decayed
     [Avivi Spurway] cortex shut down complete
     [core] instance shut down complete
