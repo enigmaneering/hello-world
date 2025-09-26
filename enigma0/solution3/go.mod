@@ -1,4 +1,4 @@
-module git.ignitelabs.net/enigma0/solution1
+module git.ignitelabs.net/enigma0/solution3
 
 go 1.25
 

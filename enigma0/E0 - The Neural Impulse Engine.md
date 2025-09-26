@@ -91,7 +91,7 @@ A looping activation allows you to cache data on the impulse object as a **thoug
 you don't need those qualities, you could drop from a looping activation into a _stimulative_ activation
 
 <picture>
-<img alt="Impulsive Activation" src="assets/E0S1D4 - Stimulative Activation.svg" width="500" style="display: block; margin-left: auto; margin-right: auto;">
+<img alt="Stimulative Activation" src="assets/E0S1D4 - Stimulative Activation.svg" width="500" style="display: block; margin-left: auto; margin-right: auto;">
 </picture>
 
 Finally, the ultimate goal is to layer many tracks of neural execution on top of one another - allowing you to build _clustered_ activations
