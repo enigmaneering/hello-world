@@ -60,7 +60,7 @@ design
         }
     }()
 
-Moving down from there we reach our potential function, we simply stops future impulses when the server is already running
+Moving down from there we reach our potential function, which simply stops future impulses when the server is already running
 on that neural endpoint
 
     func Potential(imp *std.Impulse) bool {
