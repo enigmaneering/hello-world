@@ -1,0 +1,28 @@
+package main
+
+import (
+	"time"
+
+	"git.ignitelabs.net/janos/core"
+	"git.ignitelabs.net/janos/core/enum/lifecycle"
+	"git.ignitelabs.net/janos/core/std"
+	"git.ignitelabs.net/janos/core/sys/rec"
+)
+
+func main() {
+	c := std.NewCortex(std.RandomName())
+	c.Frequency = 1 //hz
+
+	c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Print", Printer, nil, Cleanup)
+
+	c.Spark()
+	core.KeepAlive(time.Second * 5)
+}
+
+func Cleanup(imp *std.Impulse) {
+	rec.Printf(imp.Bridge, "cleaning up\n")
+}
+
+func Printer(imp *std.Impulse) {
+	rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+}

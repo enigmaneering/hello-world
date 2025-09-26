@@ -1,4 +1,4 @@
-# `E0S0 - How long has passed?`
+# `E0S0 - How Long has Passed?`
 ### `Alex Petz, Ignite Laboratories, September 2025`
 
 ---
@@ -104,9 +104,8 @@ loop.  It would be a _lot_ simpler if we could simply _ask_ a function to be cal
         core.KeepAlive()
     }
         
-    func Printer(imp *std.Impulse) bool {
+    func Printer(imp *std.Impulse) {
         fmt.Println(imp.Timeline.CyclePeriod())
-        return true
     }
 
 The output of this, as you would expect, is just as accurate as our handwritten feedback loop above. While this 
@@ -128,19 +127,16 @@ So, let's multiplex a few loops:
         core.KeepAlive()
     }
     
-    func PrintCycle(imp *std.Impulse) bool {
+    func PrintCycle(imp *std.Impulse) {
         fmt.Println("[cycle] " + imp.Timeline.CyclePeriod().String())
-        return true
     }
     
-    func PrintRefractory(imp *std.Impulse) bool {
+    func PrintRefractory(imp *std.Impulse) {
         fmt.Println("[refraction] " + imp.Timeline.RefractoryPeriod().String())
-        return true
     }
     
-    func PrintResponse(imp *std.Impulse) bool {
+    func PrintResponse(imp *std.Impulse) {
         fmt.Println("[response] " + imp.Timeline.ResponseTime().String())
-        return true
     }
 
 Our output now contains the printed results of all three functions _independently_ being called in unison across
@@ -171,8 +167,8 @@ this case we need a `when.StepMaker` - which creates a pair of functions we can 
     var Step func()
     
     func main() {
-    c := std.NewCortex(std.RandomName())
-    c.Frequency = 60 //hz
+        c := std.NewCortex(std.RandomName())
+        c.Frequency = 60 //hz
     
         makePotential, step := when.StepMaker(3) // There are 3 neural endpoints to step between
         Step = step
@@ -185,22 +181,19 @@ this case we need a `when.StepMaker` - which creates a pair of functions we can 
         core.KeepAlive()
     }
     
-    func PrintCycle(imp *std.Impulse) bool {
+    func PrintCycle(imp *std.Impulse) {
         fmt.Printf("%v [cycle] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.CyclePeriod().String())
         Step()
-        return true
     }
     
-    func PrintRefractory(imp *std.Impulse) bool {
+    func PrintRefractory(imp *std.Impulse) {
         fmt.Printf("%v [refraction] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.RefractoryPeriod().String())
         Step()
-        return true
     }
     
-    func PrintResponse(imp *std.Impulse) bool {
+    func PrintResponse(imp *std.Impulse) {
         fmt.Printf("%v [response] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.ResponseTime().String())
         Step()
-        return true
     }
 
 I've added the cycle period to the left so you can see the frequency of each function's activation: 20hz.  That's because

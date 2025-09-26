@@ -9,6 +9,12 @@ import (
 	"git.ignitelabs.net/janos/core/sys/when"
 )
 
+/*
+E0S0
+
+This prints several statistics through a stepped potential function.
+*/
+
 var Step func()
 
 func main() {
@@ -38,20 +44,17 @@ func main() {
 	core.KeepAlive()
 }
 
-func PrintCycle(imp *std.Impulse) bool {
+func PrintCycle(imp *std.Impulse) {
 	fmt.Printf("%v [cycle] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.CyclePeriod().String())
 	Step()
-	return true
 }
 
-func PrintRefractory(imp *std.Impulse) bool {
+func PrintRefractory(imp *std.Impulse) {
 	fmt.Printf("%v [refraction] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.RefractoryPeriod().String())
 	Step()
-	return true
 }
 
-func PrintResponse(imp *std.Impulse) bool {
+func PrintResponse(imp *std.Impulse) {
 	fmt.Printf("%v [response] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.ResponseTime().String())
 	Step()
-	return true
 }
