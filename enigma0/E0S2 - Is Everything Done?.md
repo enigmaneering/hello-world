@@ -100,7 +100,7 @@ what's happening if we enable _verbose_ recording.
     [core] creating synapse 'Print'
     [Deorsa Readshaw] sparking neural activity
     [core] instance shutting down in 3s
-    [Deorsa Readshaw] wired axon to synapse 'Print'
+    [Deorsa Readshaw] wired axon to neural endpoint 'Print'
     [Deorsa Readshaw ⇝ Print] looping
     [Deorsa Readshaw ⇝ Print] 1.003269s
     [Deorsa Readshaw ⇝ Print] 999.879208ms
