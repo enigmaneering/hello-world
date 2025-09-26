@@ -99,7 +99,7 @@ This is our resulting output
     [Smedley Kynforth ⇝ Server C] launching server at :4242
     [Smedley Kynforth ⇝ Server C] cycling
 
-More importantly, though, if you request `localhost:4242` in your web browser you'll be greeted with a synaptic
+More importantly, though, if you ping `localhost:4242` in your web browser you'll be greeted with a synaptic
 revelation, identifying itself amongst the void of internet traffic - a lone sentinel of pleasantries and cordiality
 in an ever-growing sea of neural endpoints, holding the line between exuberant acknowledgement and apathetic ignorance
 
