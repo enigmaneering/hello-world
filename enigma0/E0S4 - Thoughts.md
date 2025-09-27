@@ -133,12 +133,15 @@ but by changing just two lines of code we resolve the efficiency _and_ solve the
 Now, rather than fighting for a shared resource, each owns a specific network endpoint and cycles itself automatically!
 This lets things run significantly more "stably" - albiet absurdly so.
 
-This is a _very_ wordy way of doing something simple, though - and the entire point of neural architectures is to
+This is a _very_ wordy way of doing something simple, though - and the entire point of aneural architecture is to
 mitigate the amount of repeated code.  If you'd like to simply create a basic neural web server which can reference
-a thought between requests, you'll find use in the `neural` package =)
+a thought between requests, you'll find use in the `neural` package.  Rather than recreating the logic in this solution,
+you can create the entire stack by defining your synapse as such
 
 	cortex.Synapses() <- neural.Net.Server(std.RandomName(), ":4242", func(imp *std.Impulse) http.Handler {
         return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
             _, _ = w.Write([]byte(fmt.Sprintf("\"Hello, World!\"\n\t- %v", imp.Bridge)))
         })
 	})
+
+Nothing else required =)
