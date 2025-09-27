@@ -15,9 +15,9 @@ import (
 )
 
 /*
-E0S4
+E0S4 - Detailed
 
-This creates three self-recycling web servers.
+This creates three self-recycling web server synapses which compete for a port.
 */
 
 var cortex = std.NewCortex(std.RandomName())
@@ -25,14 +25,14 @@ var cortex = std.NewCortex(std.RandomName())
 func main() {
 	cortex.Frequency = 4 //hz
 
+	// NOTE: Set each synapse to different ports for a more stable cycle =)
+
 	cortex.Synapses() <- std.NewSynapse(lifecycle.Looping, "Server A", Serve(4242), Potential, Cleanup)
 	cortex.Synapses() <- std.NewSynapse(lifecycle.Looping, "Server B", Serve(4242), Potential, Cleanup)
 	cortex.Synapses() <- std.NewSynapse(lifecycle.Looping, "Server C", Serve(4242), Potential, Cleanup)
 
-	// NOTE: Set each synapse to different ports for a more stable cycle =)
-
 	cortex.Spark()
-	core.KeepAlive(time.Second * 2)
+	core.KeepAlive(time.Second)
 }
 
 func Serve(port int) func(imp *std.Impulse) {
