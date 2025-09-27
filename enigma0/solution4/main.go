@@ -75,7 +75,7 @@ func Serve(port int) func(imp *std.Impulse) {
 				imp.Thought.Gate.Lock()
 				defer imp.Thought.Gate.Unlock()
 
-				_ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
+				_ = imp.Thought.Revelation.(*http.Server).Shutdown(context.Background())
 			}
 		}()
 	}
@@ -95,6 +95,6 @@ func Cleanup(imp *std.Impulse) {
 		imp.Thought.Gate.Lock()
 		defer imp.Thought.Gate.Unlock()
 
-		_ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
+		_ = imp.Thought.Revelation.(*http.Server).Shutdown(context.Background())
 	}
 }

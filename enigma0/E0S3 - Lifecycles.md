@@ -144,3 +144,9 @@ plays a part in impulsive activation
 This is really useful when you need to fire something but have _absolutely zero control_ over its ability to execute.
 
 In the next solution, we'll start putting together our first intelligent system using neural activations - a web server =) 
+
+### Synaptic Decay
+
+While it doesn't deserve an entire solution, it's important to note that the _impulse_ can be used to decay the synapse.
+If an activation has deemed this beat to be the end of its neural lifecycle, you can set `impulse.Decay = true` to cause
+the synapse to self-decay.

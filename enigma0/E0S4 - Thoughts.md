@@ -1,9 +1,9 @@
-# `E0S3 - Neural Servers`
+# `E0S3 - Thoughts`
 ### `Alex Petz, Ignite Laboratories, September 2025`
 
 ---
 
-### Self-Reactivating Code
+### Neural Servers
 
 Let's pose ourselves a challenge
 
@@ -16,7 +16,8 @@ This solution is a little more deep than those before it, but I'll walk you thro
 let's discuss _what's_ happening in this example.  At an even interval the cortex launches off _three_ web server 
 synapses, but only _one_ of them will succeed in grabbing port _4242_ at a time.  The two that don't grab the port will 
 cycle out and wait for the next available impulse. On activation, the impulse forms a _thought_ - quite literally!  This 
-thought is a reference held by all future impulses, allowing future activations to mature it over time.
+thought is a reference held by all future impulses, allowing future activations to mature it over time.  All thoughts, in
+addition, are paired with a 'gate' mutex for thread-safe access.
 
     // Action Function
 
@@ -60,7 +61,7 @@ design
             imp.Thought.Gate.Lock()
             defer imp.Thought.Gate.Unlock()
 
-            _ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
+            _ = imp.Thought.Revelation.(*http.Server).Shutdown(context.Background())
         }
     }()
 
@@ -84,7 +85,7 @@ web server's resources
             imp.Thought.Gate.Lock()
             defer imp.Thought.Gate.Unlock()
 
-            _ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
+            _ = imp.Thought.Revelation.(*http.Server).Shutdown(context.Background())
         }
     }
 
@@ -106,9 +107,9 @@ This is our resulting output
     [Smedley Kynforth ⇝ Server C] launching server at :4242
     [Smedley Kynforth ⇝ Server C] cycling
 
-More importantly, if you ping `localhost:4242` in your web browser you'll be greeted with a synaptic
-revelation, identifying itself amongst the void of internet traffic - a lone sentinel of pleasantries and cordiality
-in an ever-growing sea of neural endpoints, holding the line between exuberance and apathy
+More importantly, if you ping `localhost:4242` in your web browser you'll be greeted with your synaptic
+endpoint, identifying itself amongst the void of internet traffic - a lone sentinel of pleasantries and cordiality
+in an ever-growing sea of neural cohorts, empathetically holding the line between exuberance and apathy
 
     "Hello, World!"
 	    - Beag Hessenthaler ⇝ Server B
@@ -131,3 +132,13 @@ but by changing just two lines of code we resolve the efficiency _and_ solve the
 
 Now, rather than fighting for a shared resource, each owns a specific network endpoint and cycles itself automatically!
 This lets things run significantly more "stably" - albiet absurdly so.
+
+This is a _very_ wordy way of doing something simple, though - and the entire point of neural architectures is to
+mitigate the amount of repeated code.  If you'd like to simply create a basic neural web server which can reference
+a thought between requests, you'll find use in the `neural` package =)
+
+	cortex.Synapses() <- neural.Net.Server(std.RandomName(), ":4242", func(imp *std.Impulse) http.Handler {
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+            _, _ = w.Write([]byte(fmt.Sprintf("\"Hello, World!\"\n\t- %v", imp.Bridge)))
+        })
+	})
