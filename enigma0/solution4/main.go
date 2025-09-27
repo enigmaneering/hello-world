@@ -49,7 +49,7 @@ func Serve(port int) func(imp *std.Impulse) {
 
 		// 1 - Assign it to the impulse's 'thought'
 
-		imp.Thought = server
+		imp.Thought = std.NewThought(server)
 
 		// 2 - Launch the server asynchronously
 
@@ -71,7 +71,11 @@ func Serve(port int) func(imp *std.Impulse) {
 		go func() {
 			time.Sleep(time.Second * 2)
 			if imp.Thought != nil {
-				_ = imp.Thought.(*http.Server).Shutdown(context.Background())
+				// Access to thoughts can be gated for thread safety
+				imp.Thought.Gate.Lock()
+				defer imp.Thought.Gate.Unlock()
+
+				_ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
 			}
 		}()
 	}
@@ -88,6 +92,9 @@ func Potential(imp *std.Impulse) bool {
 func Cleanup(imp *std.Impulse) {
 	// Access the thought and shut it down
 	if imp.Thought != nil {
-		_ = imp.Thought.(*http.Server).Shutdown(context.Background())
+		imp.Thought.Gate.Lock()
+		defer imp.Thought.Gate.Unlock()
+
+		_ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
 	}
 }

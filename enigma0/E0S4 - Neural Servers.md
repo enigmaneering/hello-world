@@ -32,7 +32,7 @@ thought is a reference held by all future impulses, allowing future activations 
 
     // 1 - Assign it to the impulse's 'thought'
 
-    imp.Thought = server
+    imp.Thought = std.NewThought(server)
 
 From there, we fire off two asynchronous operations.  First, we launch the thought's web server in a goroutine
 
@@ -56,7 +56,11 @@ design
     go func() {
         time.Sleep(time.Second * 2)
         if imp.Thought != nil {
-            _ = imp.Thought.(*http.Server).Shutdown(context.Background())
+            // Access to thoughts can be gated for thread safety
+            imp.Thought.Gate.Lock()
+            defer imp.Thought.Gate.Unlock()
+
+            _ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
         }
     }()
 
@@ -77,7 +81,10 @@ web server's resources
     func Cleanup(imp *std.Impulse) {
         // Access the thought and shut it down
         if imp.Thought != nil {
-            _ = imp.Thought.(*http.Server).Shutdown(context.Background())
+            imp.Thought.Gate.Lock()
+            defer imp.Thought.Gate.Unlock()
+
+            _ = imp.Thought.Realization.(*http.Server).Shutdown(context.Background())
         }
     }
 
