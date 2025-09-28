@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"git.ignitelabs.net/janos/core"
+	"git.ignitelabs.net/janos/core/enum/lifecycle"
 	"git.ignitelabs.net/janos/core/std"
 	"git.ignitelabs.net/janos/core/std/neural"
 	"git.ignitelabs.net/janos/core/sys/rec"
@@ -15,7 +16,7 @@ import (
 /*
 E0S4 - Simple
 
-This demonstrates a simple self-restarting neural.Net.Server.
+This demonstrates a simple self-restarting neural.Net.Server which impulsively fires a muted cortex.
 */
 
 func main() {
@@ -26,7 +27,7 @@ func main() {
 	port := ":4242"
 
 	// NOTE: Change this to `Handler` for a simple stable server demonstration ⬎
-	cortex.Synapses() <- neural.Net.Server("localhost"+port, port, HandlerWhichShutsDown, func(imp *std.Impulse) {
+	cortex.Synapses() <- neural.Net.Server(lifecycle.Looping, "localhost"+port, port, HandlerWhichShutsDown, func(imp *std.Impulse) {
 		cortex.Impulse()
 	})
 

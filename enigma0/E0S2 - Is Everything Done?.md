@@ -120,4 +120,11 @@ Every cortex, by default, assigns its own cleanup deferral to core on creation. 
 immediately get visual confirmation that your entity has _finished_ decaying - an often useful sanity check!  In the
 land of debugging concurrent execution, knowing that an entity _hasn't_ decayed often reveals deadlocks and stalled conditions.
 
-The atlas is unique to your _module_ - not your main file - and must live next to your `go.mod` file.  
+The atlas is unique to your _module_ - not your main file - and must live next to your `go.mod` file.
+
+Alternatively, if you want to adjust an atlas value (aside from the preamble) before you launch your neural activity,
+you can directly change the atlas values.  A common best practice is to put these changes in your init function
+
+    func init() {
+        atlas.Verbose(true) 
+    }
