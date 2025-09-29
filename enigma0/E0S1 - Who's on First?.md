@@ -27,7 +27,7 @@ forms.  Let's take a look at what a bridge looks like
     }
     
     func Printer(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+        rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
     }
 ---
     [Shafiq Dedman] Hello, World!
@@ -61,7 +61,7 @@ neuron, you can!  The reason to do so is when you have multiple cortices driving
     }
     
     func Printer(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+        rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
     }
 ---
     [Leon Adlem] Hello, World!
@@ -92,7 +92,7 @@ simple synapses again
     }
     
     func Printer(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+        rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
     }
 ---
     [Kiara Bridat] Hello, World!
@@ -134,7 +134,7 @@ functions.  More importantly, you can create potentials off of _references!_
         }
         toggle = !toggle
 
-        rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+        rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
     }
 ---
     [Jeannine Brunelleschi] Hello, World!

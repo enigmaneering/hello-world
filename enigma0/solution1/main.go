@@ -38,5 +38,5 @@ func Printer(imp *std.Impulse) {
 		frequency = 1.0
 	}
 	toggle = !toggle
-	rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+	rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
 }

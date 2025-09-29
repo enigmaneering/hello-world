@@ -46,7 +46,7 @@ func HandlerWhichShutsDown(imp *std.Impulse) http.Handler {
 	// Introduce a faux delayed shutdown
 	go func() {
 		delay := time.Second * 5
-		rec.Printf(imp.Bridge, "disconnecting in %v\n", delay)
+		rec.Printf(imp.Bridge.String(), "disconnecting in %v\n", delay)
 		time.Sleep(delay)
 		if imp.Thought != nil && imp.Thought.Revelation != nil {
 			_ = imp.Thought.Revelation.(*http.Server).Shutdown(context.Background())

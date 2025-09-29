@@ -59,9 +59,9 @@ sleeps, and then prints the moment it ends.  This will interleave the print call
     }
     
     func Printer(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "START: %v\n", time.Now())
+        rec.Printf(imp.Bridge.String(), "START: %v\n", time.Now())
         time.Sleep(time.Second * 3)
-        rec.Printf(imp.Bridge, " STOP: %v\n", time.Now())
+        rec.Printf(imp.Bridge.String(), " STOP: %v\n", time.Now())
     }
 ---
     [Makya Beslier ⇝ Print] stimulating

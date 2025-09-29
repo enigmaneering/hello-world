@@ -162,20 +162,25 @@ goroutines
 The first thing you'll notice is there's _no_ guarantee in the order of execution!  That can be solved by adding a
 _potential function_ to our synapses.  Currently, we've passed `nil` as our potential (which equates to `when.Always()`)
 but we can use any potential we'd like.  The `when` package provides a handful of common neural potentials, but in
-this case we need a `when.StepMaker` - which creates a pair of functions we can use to control the neural activations
-    
-    var Step func()
-    
+this case we can simply rely upon the _phase_ of the cortical beat.  On every impulse, the cortex increments a beat
+in the closed interval of `[0, Phase]` (inclusive).  If you set the phase to a negative value, the beat will infinitely
+increment
+
     func main() {
         c := std.NewCortex(std.RandomName())
         c.Frequency = 60 //hz
+        c.Phase = 3
     
-        makePotential, step := when.StepMaker(3) // There are 3 neural endpoints to step between
-        Step = step
+        c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Cycle Printer", PrintCycle, func(imp *std.Impulse) bool {
+            return imp.Beat == 0
+        })
+        c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Refractory Printer", PrintRefractory, func(imp *std.Impulse) bool {
+            return imp.Beat == 1
+        })
     
-        c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Cycle Printer", PrintCycle, makePotential(0))
-        c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Refractory Printer", PrintRefractory, makePotential(1))
-        c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Response Time Printer", PrintResponse, makePotential(2))
+        c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Response Time Printer", PrintResponse, func(imp *std.Impulse) bool {
+            return imp.Beat == 2
+        })
     
         c.Spark()
         core.KeepAlive()
@@ -183,43 +188,45 @@ this case we need a `when.StepMaker` - which creates a pair of functions we can 
     
     func PrintCycle(imp *std.Impulse) {
         fmt.Printf("%v [cycle] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.CyclePeriod().String())
-        Step()
     }
     
     func PrintRefractory(imp *std.Impulse) {
         fmt.Printf("%v [refraction] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.RefractoryPeriod().String())
-        Step()
     }
     
     func PrintResponse(imp *std.Impulse) {
         fmt.Printf("%v [response] %v\n", imp.Timeline.CyclePeriod().String(), imp.Timeline.ResponseTime().String())
-        Step()
     }
 
+
 I've added the cycle period to the left so you can see the frequency of each function's activation: 20hz.  That's because
-we're stepping between three endpoints in an infinite loop
+we're phasing at ⅓ the rate of 60hz.  You'll also notice the initial activation happens as fast as possible before the
+remaining activations stabilize
 
-    49.555916ms [cycle] 49.555916ms
-    49.810417ms [refraction] 49.784167ms
-    49.178834ms [response] 334ns
-    50.846709ms [cycle] 50.846709ms
-    50.039458ms [refraction] 50.021542ms
-    50.874583ms [response] 167ns
-    49.984125ms [cycle] 49.984125ms
-    49.215375ms [refraction] 49.185208ms
-    49.793417ms [response] 16.709µs
+    19.35025ms [cycle] 19.35025ms
+    35.940209ms [refraction] 35.940209ms
+    51.671459ms [response] 167ns
+    66.620417ms [cycle] 66.620417ms
+    66.700791ms [refraction] 66.678583ms
+    66.839375ms [response] 42ns
+    66.662583ms [cycle] 66.662583ms
+    66.659792ms [refraction] 66.640792ms
 
-The potential function, however, can be anything you'd desire - let's put a little faux delay in the last activation
+The potential function, however, can be anything you'd desire - let's put a little faux delay in the last activation and
+then bring the rate of speed down to 2hz
+
+    c.Frequency = 2 //hz
+
+    ...
 
 	c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Cycle Printer", PrintCycle, makePotential(0))
 	c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Refractory Printer", PrintRefractory, makePotential(1))
 
 	i := 0
-	final := makePotential(2)
 	c.Synapses() <- std.NewSynapse(lifecycle.Looping, "Response Time Printer", PrintResponse, func(imp *std.Impulse) bool {
-		if final(imp) {
+		if imp.Beat == 2 {
 			i++
-			if i >= 128 {
+			if i >= 3 {
 				i = 0
 				return true
 			}
@@ -227,20 +234,16 @@ The potential function, however, can be anything you'd desire - let's put a litt
 		return false
 	})
 
-Here the final activation requires 128 impulses before it allows it to activate, which regulates the flow of the other
-neurons in the stepped cluster
+Here the final potential requires 3 impulses before it activates, which you can visibly watch time out in your console
+at this slower speed
 
-    19.158667ms [cycle] 19.158667ms
-    35.780084ms [refraction] 35.780084ms
-    2.169033709s [response] 542ns
-    2.166928917s [cycle] 2.166928917s
-    2.166973875s [refraction] 2.166967042s
-    2.167370333s [response] 583ns
-    2.166713708s [cycle] 2.166713708s
-    2.166828958s [refraction] 2.166810375s
-    2.166855042s [response] 750ns
-    2.166907208s [cycle] 2.166907208s
-    2.167134125s [refraction] 2.167114833s
+    503.240083ms [cycle] 503.240083ms
+    1.003172583s [refraction] 1.003172583s
+    1.999216s [cycle] 1.999216s
+    2.000086084s [refraction] 2.00003925s
+    2.00078625s [cycle] 2.00078625s
+    2.000022791s [refraction] 1.99997875s
+    5.502637s [response] 1.083µs
 
 I think that's a wonderful initial primer to the basics of using a neural cortex.  We'll start hitting some more
 advanced topics in the next solution =)

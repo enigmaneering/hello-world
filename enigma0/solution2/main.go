@@ -28,9 +28,9 @@ func main() {
 }
 
 func Cleanup(imp *std.Impulse) {
-	rec.Printf(imp.Bridge, "cleaning up\n")
+	rec.Printf(imp.Bridge.String(), "cleaning up\n")
 }
 
 func Printer(imp *std.Impulse) {
-	rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+	rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
 }

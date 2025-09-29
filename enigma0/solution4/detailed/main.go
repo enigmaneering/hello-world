@@ -54,12 +54,12 @@ func Serve(port int) func(imp *std.Impulse) {
 		// 2 - Launch the server asynchronously
 
 		go func() {
-			rec.Printf(imp.Bridge, "launching server at :%d\n", port)
+			rec.Printf(imp.Bridge.String(), "launching server at :%d\n", port)
 
 			if err := server.ListenAndServe(); err != nil && errors.Is(err, http.ErrServerClosed) {
-				rec.Printf(imp.Bridge, "disconnected\n")
+				rec.Printf(imp.Bridge.String(), "disconnected\n")
 			} else {
-				rec.Printf(imp.Bridge, "cycling\n")
+				rec.Printf(imp.Bridge.String(), "cycling\n")
 			}
 
 			// Release the thought

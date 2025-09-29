@@ -30,9 +30,9 @@ func main() {
 }
 
 func Printer(imp *std.Impulse) {
-	rec.Printf(imp.Bridge, "START: %v\n", time.Now())
+	rec.Printf(imp.Bridge.String(), "START: %v\n", time.Now())
 	time.Sleep(time.Second * 3)
-	rec.Printf(imp.Bridge, "STOP: %v\n", time.Now())
+	rec.Printf(imp.Bridge.String(), "STOP: %v\n", time.Now())
 }
 
 func Impulse() {
@@ -46,9 +46,9 @@ func Impulse() {
 	impulsePotential := rand.IntN(2) == 1
 	cortex.Synapses() <- std.NewSynapse(lifecycle.Impulse, "Print", Printer, func(imp *std.Impulse) bool {
 		if impulsePotential {
-			rec.Printf(imp.Bridge, "potential: high\n")
+			rec.Printf(imp.Bridge.String(), "potential: high\n")
 		} else {
-			rec.Printf(imp.Bridge, "potential: low\n")
+			rec.Printf(imp.Bridge.String(), "potential: low\n")
 		}
 		return impulsePotential
 	})
@@ -67,10 +67,10 @@ func Trigger() {
 	now := time.Now().Add(time.Second * 5)
 	cortex.Synapses() <- std.NewSynapse(lifecycle.Triggered, "Print", Printer, func(imp *std.Impulse) bool {
 		if time.Now().After(now) {
-			rec.Printf(imp.Bridge, "potential: high\n")
+			rec.Printf(imp.Bridge.String(), "potential: high\n")
 			return true
 		}
-		rec.Printf(imp.Bridge, "potential: low\n")
+		rec.Printf(imp.Bridge.String(), "potential: low\n")
 		return false
 	})
 

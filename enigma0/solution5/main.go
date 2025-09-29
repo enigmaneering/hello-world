@@ -7,7 +7,12 @@ import (
 	"git.ignitelabs.net/janos/core/enum/lifecycle"
 	"git.ignitelabs.net/janos/core/std"
 	"git.ignitelabs.net/janos/core/std/neural"
+	"git.ignitelabs.net/janos/core/sys/atlas"
 )
+
+func init() {
+	atlas.Verbose(true)
+}
 
 func main() {
 	var cortex *std.Cortex

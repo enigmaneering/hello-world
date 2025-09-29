@@ -38,12 +38,12 @@ addition, are paired with a 'gate' mutex for thread-safe access.
 From there, we fire off two asynchronous operations.  First, we launch the thought's web server in a goroutine
 
     go func() {
-        rec.Printf(imp.Bridge, "launching server at :%d\n", port)
+        rec.Printf(imp.Bridge.String(), "launching server at :%d\n", port)
 
         if err := server.ListenAndServe(); err != nil && errors.Is(err, http.ErrServerClosed) {
-            rec.Printf(imp.Bridge, "disconnected\n") // This is an intended 'shutdown' event
+            rec.Printf(imp.Bridge.String(), "disconnected\n") // This is an intended 'shutdown' event
         } else {
-            rec.Printf(imp.Bridge, "cycling\n") // This is an error
+            rec.Printf(imp.Bridge.String(), "cycling\n") // This is an error
         }
 
         // Release the thought
@@ -171,7 +171,7 @@ you to leverage the optional _onDisconnect_ parameter in the `neural.Net.Server`
         // Introduce a faux delayed shutdown
         go func() {
             delay := time.Second * 5
-            rec.Printf(imp.Bridge, "disconnecting in %v\n", delay)
+            rec.Printf(imp.Bridge.String(), "disconnecting in %v\n", delay)
             time.Sleep(delay)
             if imp.Thought != nil && imp.Thought.Revelation != nil {
                 _ = imp.Thought.Revelation.(*http.Server).Shutdown(context.Background())

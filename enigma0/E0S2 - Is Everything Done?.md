@@ -65,11 +65,11 @@ on creation through the optional final parameter
     }
     
     func Cleanup(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "synapse cleaning up\n")
+        rec.Printf(imp.Bridge.String(), "synapse cleaning up\n")
     }
     
     func Printer(imp *std.Impulse) {
-        rec.Printf(imp.Bridge, "%v\n", imp.Timeline.CyclePeriod())
+        rec.Printf(imp.Bridge.String(), "%v\n", imp.Timeline.CyclePeriod())
     }
 ---
     [Marelda Maytum ⇝ Print] 1.002303334s
