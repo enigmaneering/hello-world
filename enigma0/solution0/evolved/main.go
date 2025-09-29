@@ -6,7 +6,6 @@ import (
 	"git.ignitelabs.net/janos/core"
 	"git.ignitelabs.net/janos/core/enum/lifecycle"
 	"git.ignitelabs.net/janos/core/std"
-	"git.ignitelabs.net/janos/core/sys/atlas"
 	"git.ignitelabs.net/janos/core/sys/when"
 )
 
