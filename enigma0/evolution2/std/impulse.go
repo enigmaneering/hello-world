@@ -13,7 +13,7 @@ type Impulse[T any] struct {
 	Synapse
 
 	// Thought represents the underlying revelation provided with this Impulse.
-	Thought[T]
+	*Thought[T]
 
 	// Bridge holds the chain of named activations in creating this Impulse.
 	Bridge Path

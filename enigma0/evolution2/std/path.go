@@ -1,9 +1,13 @@
 package std
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // A Path is a sequence of string identifiers which can act as a chain of custody.
-type Path []string
+// NOTE: This is a Stringer type so we will be able to perform type switching at a later time
+type Path []fmt.Stringer
 
 // Emit outputs the path as a delimited string.
 //
@@ -14,5 +18,9 @@ func (t Path) Emit(delimiter ...string) string {
 		d = delimiter[0]
 	}
 
-	return strings.Join(t, d)
+	strs := make([]string, len(t))
+	for i, s := range t {
+		strs[i] = s.String()
+	}
+	return strings.Join(strs, d)
 }
