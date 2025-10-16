@@ -42,7 +42,7 @@ func (id *Idea[T]) getThought(code ...any) (*Thought[T], error) {
 	if len(code) == 0 {
 		return nil, errs.IdeaCodeRequired
 	}
-	if Stringify(code[0]) != Stringify(id.disclosure.Code) {
+	if !id.disclosure.Check(code[0]) {
 		return nil, errs.IdeaCodeInvalid
 	}
 	return id.thought, nil
