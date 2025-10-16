@@ -12,4 +12,4 @@ go 1.25
 //
 // - Alex
 
-require git.ignitelabs.net/janos/core v0.0.45
+require git.ignitelabs.net/janos/core v0.0.48

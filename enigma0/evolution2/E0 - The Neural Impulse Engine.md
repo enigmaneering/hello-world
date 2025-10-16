@@ -203,7 +203,7 @@ Your JanOS instance's initialization moment, for instance, is always available f
         Synapse
         
         // Thought represents the underlying revelation provided with this Impulse.
-        Thought[T]
+        *Thought[T]
         
         // Bridge holds the chain of named activations in creating this Impulse. 
         Bridge    []string
@@ -293,12 +293,12 @@ Lastly, I'd like to talk about a neural _thought_
     // NewThought creates a new instance of a Thought[T] and assigns it a unique Path identifier by calling id.Next()
     //
     // NOTE: If you'd like to assign the thought's path directly, you may provide it through the variadic.
-    func NewThought[T any](revelation T, path ...string) Thought[T] {
+    func NewThought[T any](revelation T, path ...string) *Thought[T] {
         p := []string{strconv.FormatUint(id.Next(), 10)}
         if len(path) > 0 {
             p = path
         }
-        return Thought[T]{
+        return &Thought[T]{
             Path:       p,
             revelation: revelation,
             gate:       new(sync.Mutex),
@@ -338,7 +338,8 @@ data points and should use another string identifier.  This allows us to travers
 structures using a `std.Path` type
 
     // A Path is a sequence of string identifiers which can act as a chain of custody.
-    type Path []string
+    // NOTE: This is a Stringer type so we will be able to perform type switching at a later time
+    type Path []fmt.Stringer
     
     // Emit outputs the path as a delimited string.
     //
@@ -348,8 +349,12 @@ structures using a `std.Path` type
         if len(delimiter) > 0 {
             d = delimiter[0]
         }
-    
-        return strings.Join(t, d)
+        
+        strs := make([]string, len(t))
+        for i, s := range t {
+            strs[i] = s.String()
+        }
+        return strings.Join(strs, d)
     }
 
 The path type acts as a recursive map key, where each string identifier should reference another map until
