@@ -35,7 +35,7 @@ func (id *Idea[T]) Path() Path {
 }
 
 func (id *Idea[T]) getThought(code ...any) (*Thought[T], error) {
-	if id.disclosure.Constraint == relationship.Open {
+	if id.disclosure.Constraint != relationship.Exclusive {
 		return id.thought, nil
 	}
 
