@@ -1,7 +1,7 @@
 package idea
 
 import (
-	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/enum/relationship"
+	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/enum/relationally"
 	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/std"
 )
 
@@ -29,8 +29,8 @@ func New[T any](revelation T, path any, disclosure ...*std.Disclosure) *std.Disc
 	}
 
 	d := &std.Disclosure{
-		Constraint: relationship.Open,
-		Code:       "",
+		Constrained: relationally.Open,
+		Code:        "",
 	}
 	if len(disclosure) > 0 {
 		d = disclosure[0]
@@ -54,4 +54,9 @@ func Reveal[T any](path any, code ...any) (T, error) {
 // See New, Reveal, and Describe
 func Describe[T any](revelation T, path any, code ...any) error {
 	return nil
+}
+
+// Decay removes the provided path endpoint from the idea nexus.
+func Decay(path any, code ...any) {
+
 }

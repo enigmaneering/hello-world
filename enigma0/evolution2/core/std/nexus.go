@@ -1,3 +1,8 @@
 package std
 
-type Nexus Idea[map[string]any]
+import "git.ignitelabs.net/janos/core/std"
+
+type Nexus struct {
+	std.Entity
+	Idea[map[string]any]
+}

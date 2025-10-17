@@ -10,6 +10,8 @@ import (
 //
 // - string
 //
+// - nil - interpreted as an empty string
+//
 // - any type that satisfies fmt.Stringer
 //
 // - any num.Primitive
@@ -23,7 +25,7 @@ import (
 // See Stringable, StringableMany, Stringify, and StringifyMany
 func Stringable(value any) bool {
 	switch value.(type) {
-	case string, fmt.Stringer:
+	case nil, string, fmt.Stringer:
 		return true
 	default:
 		_, err := num.ToStringSafe(value)

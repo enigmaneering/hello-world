@@ -6,14 +6,14 @@ import (
 	"git.ignitelabs.net/janos/core/std"
 )
 
-type Impulse[T any] struct {
+type Impulse struct {
 	id uint64
 
 	// Synapse represents the originating synapse that created this Impulse.
 	Synapse
 
-	// Thought represents the underlying revelation provided with this Impulse.
-	*Thought[T]
+	// Arguments cache the impulse chain's lifetime context.
+	Arguments []any
 
 	// Bridge holds the chain of named activations in creating this Impulse.
 	Bridge Path
@@ -37,5 +37,5 @@ type Impulse[T any] struct {
 	// Timeline holds a temporal buffer of prior synaptic activations.
 	//
 	// NOTE: The impulse is not added to the buffer before calling the potential or action.
-	Timeline *std.TemporalBuffer[Impulse[T]]
+	Timeline *std.TemporalBuffer[Impulse]
 }

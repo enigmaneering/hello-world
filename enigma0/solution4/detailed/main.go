@@ -71,7 +71,7 @@ func Serve(port int) func(imp *std.Impulse) {
 		go func() {
 			time.Sleep(time.Second * 2)
 			if imp.Thought != nil {
-				// Constraint to thoughts can be gated for thread safety
+				// Constrained to thoughts can be gated for thread safety
 				imp.Thought.Gate.Lock()
 				defer imp.Thought.Gate.Unlock()
 
@@ -90,7 +90,7 @@ func Potential(imp *std.Impulse) bool {
 }
 
 func Cleanup(imp *std.Impulse) {
-	// Constraint the thought and shut it down
+	// Constrained the thought and shut it down
 	if imp.Thought != nil {
 		imp.Thought.Gate.Lock()
 		defer imp.Thought.Gate.Unlock()
