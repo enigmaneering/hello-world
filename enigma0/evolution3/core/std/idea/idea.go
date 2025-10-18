@@ -1,8 +1,8 @@
 package idea
 
 import (
-	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/enum/relationally"
-	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/std"
+	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution3/core/enum/relationally"
+	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution3/core/std"
 )
 
 // New places a thought at the provided path relative to the nexus.Origin and returns a *std.Disclosure controlling its access.
@@ -34,7 +34,7 @@ func New[T any](revelation T, path any, disclosure ...*std.Disclosure) *std.Disc
 		d = disclosure[0]
 	}
 
-	id := std.NewIdea[T](std.NewThought(revelation), p, d)
+	id, _ := std.NewIdea[T](std.NewThought(revelation), p, d)
 	// TODO: Place on the nexus
 	return d
 }

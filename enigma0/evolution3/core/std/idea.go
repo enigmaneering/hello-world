@@ -1,8 +1,8 @@
 package std
 
 import (
-	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/enum/errs"
-	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/enum/relationally"
+	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution3/core/enum/errs"
+	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution3/core/enum/relationally"
 )
 
 // An Idea represents a locatable and psychologically constrainable Thought.
@@ -14,12 +14,20 @@ type Idea[T any] struct {
 	disclosure *Disclosure
 }
 
-func NewIdea[T any](thought Thought[T], path Path, disclosure *Disclosure) Idea[T] {
+func NewIdea[T any](thought Thought[T], path Path, disclosure ...*Disclosure) (Idea[T], *Disclosure) {
+	d := &Disclosure{
+		Constraint: relationally.Open,
+		code:       nil,
+	}
+	if len(disclosure) > 0 {
+		d = disclosure[0]
+	}
+
 	return Idea[T]{
 		path:       path,
 		thought:    thought,
-		disclosure: disclosure,
-	}
+		disclosure: d,
+	}, d
 }
 
 func (id *Idea[T]) sanityCheck() {
