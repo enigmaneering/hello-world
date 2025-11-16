@@ -73,8 +73,8 @@ func (id *Idea[T]) Describe(revelation T, code ...any) error {
 //
 // NOTE: For absolute pathing, please use the 'nexus' package.
 func (id *Idea[t]) Relative(path any, code ...any) (any, error) {
-	// id.Relative("") -> Revelation()
-	// id.Relative("Revelation") -> Revelation().Revelation___
-	// id.Relative("Field") -> Revelation().Field___
-	// id.Relative("Method1", "Field", "Method2") -> Revelation().Method1().Field.Method2()
+	// id.Recall("") -> Revelation()
+	// id.Recall("Revelation") -> Revelation().Revelation___
+	// id.Recall("Field") -> Revelation().Field___
+	// id.Recall("Method1", "Field", "Method2") -> Revelation().Method1().Field.Method2()
 }

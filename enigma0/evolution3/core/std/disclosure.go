@@ -3,7 +3,7 @@ package std
 import (
 	"fmt"
 
-	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution2/core/enum/relationally"
+	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution3/core/enum/relationally"
 )
 
 // A Disclosure provides a control surface over access to an Idea's Thought.  Whoever holds a reference

@@ -18,6 +18,6 @@ All I truly know is it's the same damned thing that drives me, too - and everyon
 
 Perhaps it's the code of existence, mythically forging a new path forward for the next generation through the art of creation.
 
-Whatever it is - God, synchronicity, or the sign maker - _I'm here for it!_
+Whatever it is - God, synchronicity, or the "sign maker" - _I'm here for it!_
 
 Aren't you, too?

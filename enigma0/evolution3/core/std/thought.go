@@ -15,15 +15,15 @@ type Thought[T any] struct {
 }
 
 // NewThought creates a new instance of a Thought[T]
-func NewThought[T any](revelation T) Thought[T] {
-	return Thought[T]{
+func NewThought[T any](revelation T) *Thought[T] {
+	return &Thought[T]{
 		revelation: revelation,
 		gate:       new(sync.Mutex),
 		created:    true,
 	}
 }
 
-func (t Thought[T]) sanityCheck() {
+func (t *Thought[T]) sanityCheck() {
 	if !t.created {
 		panic("a std.Thought[T] must be created through std.NewThought[T]")
 	}
@@ -34,7 +34,7 @@ func (t Thought[T]) sanityCheck() {
 
 // Revelation sets and/or gets the Thought's inner revelation.  If no value is
 // provided, it merely gets - otherwise it sets the value before returning it.
-func (t Thought[T]) Revelation(value ...T) T {
+func (t *Thought[T]) Revelation(value ...T) T {
 	t.sanityCheck()
 	t.gate.Lock()
 	defer t.gate.Unlock()

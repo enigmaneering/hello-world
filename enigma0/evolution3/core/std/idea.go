@@ -7,14 +7,13 @@ import (
 
 // An Idea represents a locatable and psychologically constrainable Thought.
 //
-// NOTE: Please use the idea.New, idea.Reveal, idea.Describe, and idea.Decay functions to orchestrate the std.Nexus of ideas.
+// NOTE: Please use the idea.New, idea.Reveal, idea.Describe, and idea.Decay functions to orchestrate the std.Cache of ideas.
 type Idea[T any] struct {
-	path       Path
-	thought    Thought[T]
+	thought    *Thought[T]
 	disclosure *Disclosure
 }
 
-func NewIdea[T any](thought Thought[T], path Path, disclosure ...*Disclosure) (Idea[T], *Disclosure) {
+func NewIdea[T any](thought *Thought[T], disclosure ...*Disclosure) (Idea[T], *Disclosure) {
 	d := &Disclosure{
 		Constraint: relationally.Open,
 		code:       nil,
@@ -24,22 +23,13 @@ func NewIdea[T any](thought Thought[T], path Path, disclosure ...*Disclosure) (I
 	}
 
 	return Idea[T]{
-		path:       path,
 		thought:    thought,
 		disclosure: d,
 	}, d
 }
 
 func (id *Idea[T]) sanityCheck() {
-	if id.path == nil {
-		id.path = Path{""}
-	}
-	id.path.sanityCheck()
 	id.thought.sanityCheck()
-}
-
-func (id *Idea[T]) Path() Path {
-	return id.path
 }
 
 // Reveal returns the underlying Thought's revelation.
@@ -68,7 +58,7 @@ func (id *Idea[T]) Describe(revelation T, code ...any) error {
 //
 // 1 - If the path is empty, the Idea's Thought is returned.
 //
-// 2 - If the Idea's Thought is a map[string]* (such as a Nexus), this will Stringify the first path component and recursively navigate relatively inwards.
+// 2 - If the Idea's Thought is a map[string]* (such as a Cache), this will Stringify the first path component and recursively navigate relatively inwards.
 //
 // 3 - Otherwise, this will recursively reflect into the result of the Idea's Revelation() method using the below pathing rules:
 //
@@ -81,8 +71,8 @@ func (id *Idea[T]) Describe(revelation T, code ...any) error {
 //
 // NOTE: For absolute pathing, please use the 'nexus' package.
 func (id *Idea[t]) Relative(path any, code ...any) (any, error) {
-	// id.Relative("") -> Revelation()
-	// id.Relative("Revelation") -> Revelation().Revelation___
-	// id.Relative("Field") -> Revelation().Field___
-	// id.Relative("Method1", "Field", "Method2") -> Revelation().Method1().Field.Method2()
+	// id.Recall("") -> Revelation()
+	// id.Recall("Revelation") -> Revelation().Revelation___
+	// id.Recall("Field") -> Revelation().Field___
+	// id.Recall("Method1", "Field", "Method2") -> Revelation().Method1().Field.Method2()
 }
