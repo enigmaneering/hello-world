@@ -7,21 +7,30 @@ import (
 	"git.ignitelabs.net/janos/core"
 )
 
-type Epiphany[TInner any, TOuter any] struct {
-	thought    Thought[TInner]
-	revelation *TOuter
+// An Epiphany is a kind of Thought that exists in two states: in its idealized or materialized form.  For example, if you'd
+// like to store data in JPEG format, its idealized form -is- encoded JPEG bytes - but its materialized form would decode
+// those bytes into its raw color information.  An epiphany is a temporal structure, meaning it will materialize on request
+// and remain as such before 'decaying' back into its idealized form after a period of inactivity by clearing the materialized
+// result out of memory.
+//
+// Don't overthink it - that's really it =)
+type Epiphany[TIdealized any, TMaterialized any] struct {
+	thought    Thought[TIdealized]
+	revelation *TMaterialized
 
-	gate     *Gate
-	motivate chan any
-	evolveFn func(TInner) (TOuter, error)
-	decay    time.Duration
+	gate        *Gate
+	motivate    chan any
+	materialize func(TIdealized) (TMaterialized, error)
+	decay       time.Duration
 }
 
-func NewEpiphany[TInner, TOuter any](evolveFn func(TInner) (TOuter, error), decay time.Duration) *Epiphany[TInner, TOuter] {
-	e := &Epiphany[TInner, TOuter]{
-		motivate: make(chan any),
-		decay:    decay,
-		evolveFn: evolveFn,
+// NewEpiphany creates a new Epiphany which can 'materialize' into something more complex on demand, then 'decay' back to
+// an idealized form after the provided amount of time with no activity.
+func NewEpiphany[TIdealized, TMaterialized any](materialize func(TIdealized) (TMaterialized, error), decay time.Duration) *Epiphany[TIdealized, TMaterialized] {
+	e := &Epiphany[TIdealized, TMaterialized]{
+		motivate:    make(chan any),
+		decay:       decay,
+		materialize: materialize,
 	}
 
 	go func() {
@@ -49,7 +58,11 @@ func NewEpiphany[TInner, TOuter any](evolveFn func(TInner) (TOuter, error), deca
 					e.gate.Lock()
 					e.revelation = nil
 					e.gate.Unlock()
+
+					// TODO: Cache the motivation as a "Decay" in std.Path{"Performance", "Epiphanies"}
 				})
+
+				// TODO: Cache the motivation as a "Reveal" in std.Path{"Performance", "Epiphanies"}
 			}
 		}
 	}()
@@ -59,14 +72,14 @@ func NewEpiphany[TInner, TOuter any](evolveFn func(TInner) (TOuter, error), deca
 
 // StringifyFn sets the method for stringing this Epiphany out.  If nil (default), Stringable operates directly on the
 // revelation - otherwise, the provided string function is called.
-func (e *Epiphany[TInner, TOuter]) StringifyFn(fn func() string) {
+func (e *Epiphany[TIdealized, TMaterialized]) StringifyFn(fn func() string) {
 	e.thought.StringifyFn(fn)
 }
 
 // Reveal returns the underlying revelation of this Epiphany.
 //
 // NOTE: To reveal a relative path, please use Recall.
-func (e *Epiphany[TInner, TOuter]) Reveal(code ...any) (TOuter, error) {
+func (e *Epiphany[TIdealized, TMaterialized]) Reveal(code ...any) (TMaterialized, error) {
 	e.gate.Lock()
 	defer e.gate.Unlock()
 
@@ -76,25 +89,25 @@ func (e *Epiphany[TInner, TOuter]) Reveal(code ...any) (TOuter, error) {
 		// No reason to block - contention is "good" for an epiphany
 	}
 	if e.revelation == nil {
-		var inner TInner
-		var outer TOuter
+		var ideal TIdealized
+		var material TMaterialized
 		var err error
-		inner, err = e.thought.Reveal(code)
+		ideal, err = e.thought.Reveal(code)
 		if err != nil {
-			return outer, err
+			return material, err
 		}
 
-		outer, err = e.evolveFn(inner)
+		material, err = e.materialize(ideal)
 		if err != nil {
-			return outer, err
+			return material, err
 		}
-		e.revelation = &outer
+		e.revelation = &material
 	}
 	return *e.revelation, nil
 }
 
 // Describe sets the underlying revelation of this Epiphany.
-func (e *Epiphany[TInner, TOuter]) Describe(revelation TInner, code ...any) error {
+func (e *Epiphany[TIdealized, TMaterialized]) Describe(revelation TIdealized, code ...any) error {
 	return e.thought.Describe(revelation, code...)
 }
 
@@ -102,6 +115,6 @@ func (e *Epiphany[TInner, TOuter]) Describe(revelation TInner, code ...any) erro
 //
 // NOTE: The code is used at any constrained points in the path, otherwise it's ignored. If you
 // need to use multiple codes, you must sequentially reveal each codified part of the path.
-func (e *Epiphany[TInner, TOuter]) Recall(relative Path) (any, error) {
+func (e *Epiphany[TIdealized, TMaterialized]) Recall(relative Path) (any, error) {
 	return e.thought.Recall(relative)
 }
