@@ -11,7 +11,7 @@ import (
 // revelation is the Stringable component unless set by Thought.Stringable.
 type Thought[T any] struct {
 	revelation T
-	gate       *sync.Mutex
+	gate       *Gate
 	disclosure *Disclosure
 	stringable func() string
 	created    bool
@@ -47,9 +47,9 @@ func (t Thought[T]) String() string {
 	return Stringify(t.revelation)
 }
 
-// Stringify sets the method for stringing this Thought out.  If nil (default), Stringable operates directly on the
+// StringifyFn sets the method for stringing this Thought out.  If nil (default), Stringable operates directly on the
 // revelation - otherwise, the provided string function is called.
-func (t *Thought[T]) Stringify(fn func() string) {
+func (t *Thought[T]) StringifyFn(fn func() string) {
 	t.stringable = fn
 }
 

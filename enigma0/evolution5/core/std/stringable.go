@@ -24,28 +24,18 @@ import (
 //
 // - - float32/float64 - using strconv.FormatFloat(fmt:"f", prec:-1)
 //
-// See Stringable, StringableMany, Stringify, and StringifyMany
-func Stringable(value any) bool {
-	switch value.(type) {
-	case nil, string, fmt.Stringer:
-		return true
-	default:
-		_, err := num.ToStringSafe(value)
-		if err != nil {
-			return false
-		}
-		return true
-	}
-}
-
-// StringableMany is a convenience method for checking if many values are Stringable - please see its documentation.
-//
-// See Stringable, StringableMany, Stringify, and StringifyMany
-func StringableMany(values ...any) bool {
+// See Stringable, Stringify, and StringifyMany
+func Stringable(values ...any) bool {
+	allGood := true
 	for _, value := range values {
-		if !Stringable(value) {
-			return false
+		switch value.(type) {
+		case nil, string, fmt.Stringer:
+		default:
+			_, err := num.ToStringSafe(value)
+			if err != nil {
+				allGood = false
+			}
 		}
 	}
-	return true
+	return allGood
 }

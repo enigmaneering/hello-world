@@ -12,7 +12,7 @@ import (
 //
 // NOTE: If the value does not satisfy Stringable, this will panic.
 //
-// See Stringable, StringableMany, Stringify, and StringifyMany
+// See Stringable, Stringify, and StringifyMany
 func Stringify(value any) string {
 	if value == nil {
 		return ""
@@ -70,7 +70,7 @@ func Stringify(value any) string {
 //
 // NOTE: If the value does not satisfy Stringable, this will panic.
 //
-// See Stringable, StringableMany, Stringify, and StringifyMany
+// See Stringable, Stringify, and StringifyMany
 func StringifyMany(values ...any) []string {
 	out := make([]string, len(values))
 	for i, raw := range values {
