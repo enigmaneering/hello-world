@@ -12,4 +12,6 @@ func Locate(source any, relative Path) (any, error) {
 	// 1.6 If it's a bidirectional or send-only channel, send the step into it - if receive-only, panic
 	// 1.7 Otherwise, panic since we cannot evaluate INTO any other type - only reveal it
 	// 2. Recursively call this method on the result with the current step removed in the path
+
+	panic("not implemented")
 }

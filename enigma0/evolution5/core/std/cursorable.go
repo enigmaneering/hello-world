@@ -109,7 +109,9 @@ In a path, these can be chained:
 [42][[-99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element -99 until it reaches it.
 
 NOTE: The 'along' operations are simply a shorthand for calling the relative and absolute functions dynamically,
-meaning they serialize whatever they are given by emitting a chain of the above rules.
+meaning they serialize whatever they are given by emitting a chain of the above rules.  The 'along' operations take
+in either a func() *T (for JumpAlong), a func() (*T, T) (for WalkAlong), or a serialized set of the instructions
+as described above.
 
 # Why an interface!?
 

@@ -10,13 +10,13 @@ type Impulse struct {
 	id uint64
 
 	// Synapse represents the originating synapse that created this Impulse.
-	Synapse
+	//Synapse
 
 	// Heart provides a callback point to signal continued activity during long-running operations.
 	//
 	// For instance, if running a large batched process, you could call Heart.Beat() during every
 	// cycle of your loop to give feedback of your continued execution.
-	*Heart
+	//*Heart
 
 	// Arguments cache the impulse chain's lifetime context.
 	Arguments []any
