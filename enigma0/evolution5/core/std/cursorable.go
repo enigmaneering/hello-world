@@ -7,17 +7,19 @@ type Cursorable[TOut any] interface {
 	// Jump performs a relative instantaneous jump 𝑛 positons forwards or backwards and -then- yields the resulting element.
 	Jump(n any) Cursorable[TOut]
 
-	// JumpTo performs an absolute instantaneous jump to a specific position and -then- yields the resulting element.
+	// JumpTo performs an absolute instantaneous jump to position 𝑖 and -then- yields the resulting element.
 	JumpTo(i any) Cursorable[TOut]
 
 	// JumpAlong will instantaneously move to the result of the "next" function and -then- yields the resulting element.
 	// This will continue until 'next' is exhausted or returns nil (if given a function provider.)
-	JumpAlong(next any) Cursorable[TOut]
+	//
+	// NOTE: You may alternatively provide a slice of direct TOut points to traverse, or an individual TOut for a single element.
+	JumpAlong(steps any, relative bool) Cursorable[TOut]
 
 	// Walk relatively traverses 𝑛 positons forwards or backwards at a rate of 'stride', yielding each element -after- each step.
 	Walk(n any, stride any) Cursorable[TOut]
 
-	// WalkTo absolutely traverses to a specific position at a rate of 'stride' and yields each element -after- each step.
+	// WalkTo absolutely traverses to position 𝑖 at a rate of 'stride' and yields each element -after- each step.
 	//
 	// NOTE: If the final element exists less than the stride distance from the last step, it will still be stepped to and yielded.
 	WalkTo(i any, stride any) Cursorable[TOut]
@@ -26,7 +28,9 @@ type Cursorable[TOut any] interface {
 	// This will continue until 'next' is exhausted or returns nil (if given a function provider.)
 	//
 	// NOTE: stride will be revealed between each step, allowing you to make a "dynamic stride" using function providers.
-	WalkAlong(next any, stride any) Cursorable[TOut]
+	//
+	// NOTE: You may alternatively provide a slice of direct TOut points to traverse, or an individual TOut for a single element.
+	WalkAlong(steps any, stride any, relative bool) Cursorable[TOut]
 
 	// Current returns the current position's element.
 	//
@@ -54,42 +58,44 @@ Single brackets are used for standard motivation using traditional index access:
 
 Double brackets indicate cursor motivation.  Moving a cursor requires three aspects:
 
-0 - Is this relative or absolute motion?  (indicated by a '*' prefix of the first operator to indicate 'relative')
+0 - Is this relative or absolute motion?  (indicated by a '~' prefix of the first operator to indicate 'relative')
 1 - Is this a 'jump' or a 'walk'?  (indicated by the presence of a second operator)
 2 - If walking, what's the stride? (indicated by the value of the second operator)
+
+NOTE: The prefix changed from '*' to support variables instead of just integers, as a * dereferences inline
 
 For example:
 
 Jumping --
-[[*0]] <- Jump(0) - Yields the current element
+[[~0]] <- Jump(0) - Yields the current element
 [[0]] <- JumpTo(0) - Yields the element at position 0
 
-[[*42]] <- Jump(42) - Yields the element 42 positions away
-[[*-42]] <- Jump(-42) - Yields the element -42 positions away
+[[~42]] <- Jump(42) - Yields the element 42 positions away
+[[~-42]] <- Jump(-42) - Yields the element -42 positions away
 
 [[42]] <- JumpTo(42) - Yields the element 42 positions from 0
 [[-42]] <- JumpTo(-42) - Yields the element -42 positions from 0
 
 Walking --
-[[*42, 0]] <- Walk(42, 0) - Yields nothing, as a zero stride yields zero elements
+[[~42, 0]] <- Walk(42, 0) - Yields nothing, as a zero stride yields zero elements
 
-[[*0, 1]] <- Walk(0, 1) - Yields the current element
+[[~0, 1]] <- Walk(0, 1) - Yields the current element
 [[0, 1]] <- WalkTo(0, 1) - Yields the elements from here to "position 0" at a stride of 1
 
-[[*42, 1]] <- Walk(42, 1) - Yields the elements from here to "42 positions away" at a stride of 1
-[[*-42, 1]] <- Walk(-42, 1) - Yields the elements from here to "-42 positions away" at a stride of 1
+[[~42, 1]] <- Walk(42, 1) - Yields the elements from here to "42 positions away" at a stride of 1
+[[~-42, 1]] <- Walk(-42, 1) - Yields the elements from here to "-42 positions away" at a stride of 1
 
 [[ 42, 1]] <- WalkTo(42, 1) - Yields the elements from here to "position 42 from zero" at a stride of 1
 [[-42, 1]] <- WalkTo(-42, 1) - Yields the elements from here to "position -42 from zero" at a stride of 1
 
-[[*42, 5]] <- Walk(42, 5) - Yields the elements from here to "42 positions away" at a stride of 5
-[[*-42, 5]] <- Walk(-42, 5) - Yields the elements from here to "-42 positions away" at a stride of 5
+[[~42, 5]] <- Walk(42, 5) - Yields the elements from here to "42 positions away" at a stride of 5
+[[~-42, 5]] <- Walk(-42, 5) - Yields the elements from here to "-42 positions away" at a stride of 5
 
 [[ 42, 5]] <- WalkTo(42, 5) - Yields the elements from here to "position 42 from zero" at a stride of 5
 [[-42, 5]] <- WalkTo(-42, 5) - Yields the elements from here to "position -42 from zero" at a stride of 5
 
 [[ 42, -5]] <- WalkTo(42, -5) - Yields the elements from here to "position 42 from zero" at a stride of -5 (see "bounded contexts")
-[[*42, -5]] <- Walk(42, -5) - Yields the elements from here to "42 positions away" at a stride of -5 (see "bounded contexts")
+[[~42, -5]] <- Walk(42, -5) - Yields the elements from here to "42 positions away" at a stride of -5 (see "bounded contexts")
 
 Bounded Contexts -
 Most data is naturally bounded by its own size, so cursor movement naturally provides Python-style 'tail indexing.'
@@ -102,15 +108,15 @@ you could logically traverse to reach a target - thus, a panic should occur if g
 
 In a path, these can be chained:
 
-[42][[*42]] <- Yields position 42 and then the element 42 positions away from it
-[42][[*99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element 99 until it reaches it.
-[42][[*-99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element -99 until it reaches it.
+[42][[~42]] <- Yields position 42 and then the element 42 positions away from it
+[42][[~99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element 99 until it reaches it.
+[42][[~-99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element -99 until it reaches it.
 [42][[99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element 99 until it reaches it.
 [42][[-99, 5]] <- Yields position 42 and then strides 5 elements at a time towards element -99 until it reaches it.
 
 NOTE: The 'along' operations are simply a shorthand for calling the relative and absolute functions dynamically,
 meaning they serialize whatever they are given by emitting a chain of the above rules.  The 'along' operations take
-in either a func() *T (for JumpAlong), a func() (*T, T) (for WalkAlong), or a serialized set of the instructions
+in either a func() ~T (for JumpAlong), a func() (~T, T) (for WalkAlong), or a serialized set of the instructions
 as described above.
 
 # Why an interface!?

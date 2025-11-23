@@ -12,19 +12,22 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+// ModuleName provides the string identifier used by the `rec` package in logging.
 var ModuleName = "glitter"
 
-var FrameRate = 60.0 // hz
+// FrameRate sets the global rate of presentation to the display.
+var FrameRate = 60.0 // (in Hz)
 
-// Synchro can be used to execute code on the SDL2 rendering thread.
+// The Synchro is used to Send() code to execute on the SDL2 thread.
 var Synchro = make(std.Synchro)
 
-var viewports = make(map[uint32]*Viewport)
+var windows = make(map[uint32]*Window)
 var framebuffers = make(map[uint32]*image.RGBA)
 var mutex = &sync.Mutex{}
 var frameNumber = uint(0)
 
-func Start() {
+// Orchestrate begins the SDL2 system and facilitates the neural rendering of graphical contexts.
+func Orchestrate() {
 	rec.Verbosef(ModuleName, "initializing SDL2\n")
 
 	if err := sdl.Init(sdl.INIT_VIDEO); err != nil {
@@ -45,8 +48,10 @@ func Start() {
 
 				Synchro.Send(func() {
 					mutex.Lock()
-					for id, viewport := range viewports {
+					for id, viewport := range windows {
 						fb := framebuffers[id]
+						presented := false
+						presentLock := &sync.Mutex{}
 						select {
 						case viewport.impulse <- Frame{
 							Image:  fb,
@@ -55,7 +60,13 @@ func Start() {
 							Delta:  delta,
 							Number: frameNumber,
 							Present: func() {
-								viewport.present(fb)
+								presentLock.Lock()
+								defer presentLock.Unlock()
+
+								if !presented {
+									presented = true
+									viewport.present(fb)
+								}
 							},
 						}:
 						default:
@@ -76,29 +87,29 @@ func Start() {
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				core.ShutdownNow()
-			case *sdl.RenderEvent:
-
 			case *sdl.WindowEvent:
 				if e.Event == sdl.WINDOWEVENT_CLOSE {
 					// Check which window was closed
-					if viewport, ok := viewports[e.WindowID]; ok {
-						viewport.Close()
-						delete(viewports, e.WindowID)
+					if viewport, ok := windows[e.WindowID]; ok {
+						go viewport.Close()
+						delete(windows, e.WindowID)
 						delete(framebuffers, e.WindowID)
 
-						if len(viewports) == 0 {
+						if len(windows) == 0 {
 							core.ShutdownNow()
 						}
 					}
 				} else if e.Event == sdl.WINDOWEVENT_SIZE_CHANGED {
-					if viewport, ok := viewports[e.WindowID]; ok {
-						w, h := viewport.window.GetSize()
-						rec.Verbosef(ModuleName, "resizing viewport \"%s\" to %dx%d\n", viewport.window.GetTitle(), w, h)
-						viewport.Resize(int(w), int(h))
+					if win, ok := windows[e.WindowID]; ok {
+						w, h := win.window.GetSize()
+						win.resize(uint(w), uint(h))
 						framebuffers[e.WindowID] = image.NewRGBA(image.Rect(0, 0, int(w), int(h)))
 					}
 				}
+			default:
 			}
+
+			Synchro.Engage()
 		}
 	}
 }

@@ -5,24 +5,41 @@ import (
 	"time"
 
 	"git.enigmaneering.net/hello-world/enigma0/solution0/evolution5/core/glitter"
+	"git.ignitelabs.net/janos/core"
 )
 
 func main() {
-	go func() {
-		a, _ := glitter.NewViewport(800, 600, "Window 0", render)
-		glitter.NewViewport(800, 600, "Window 1", render)
-		glitter.NewViewport(800, 600, "Window 2", render)
-		glitter.NewViewport(800, 600, "Window 3", render)
+	a := glitter.CreateWindowAt(640, 480, 55, 66, "Hello, glitter!", render)
+	b := glitter.CreateWindowAt(640, 480, 77, 88, "Hello, glitter!", render)
+	c := glitter.CreateWindowAt(640, 480, 99, 111, "Hello, glitter!", render)
+	d := glitter.CreateWindowAt(640, 480, 122, 133, "Hello, glitter!", render)
 
-		time.Sleep(time.Second * 5)
-		for i := uint32(0); i < 5; i++ {
-			for ii := uint32(0); ii < 5; ii++ {
-				a.Move(i, ii)
+	go a.Title("Window A")
+	go b.Title("Window B")
+	go c.Title("Window C")
+	go d.Title("Window D")
+
+	go func() {
+		toggle := false
+		for core.Alive() {
+			time.Sleep(2 * time.Second)
+			if toggle {
+				glitter.FrameRate = 240
+			} else {
+				glitter.FrameRate = 60
 			}
+			toggle = !toggle
 		}
 	}()
 
-	glitter.Start()
+	go func() {
+		time.Sleep(time.Second)
+		a.Maximize()
+		time.Sleep(time.Second)
+		a.Maximize()
+	}()
+
+	glitter.Orchestrate()
 }
 
 func render(frame glitter.Frame) {

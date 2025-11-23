@@ -15,3 +15,9 @@ func (p Path) sanityCheck() {
 func (p Path) String() string {
 	return strings.Join(StringifyMany(p), "⇝")
 }
+
+func (p Path) Swizzle(positions ...uint) []any {
+
+}
+
+// homoiconicity
