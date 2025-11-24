@@ -306,3 +306,13 @@ Predicates, in the sense of a `std.Cursor`, represent a call to `Yield()` - prov
 movement operations to be chained off of.  You can chain as many of these operations together as you'd like:
 
     [42]-[SelectFn]-<<:99, 4>>-|11|-[nil, nil, Transform[int]] // Ultimately yields an 'int' type
+
+Finally, a special operation is reserved for _emitting_ the LIQ as a `std.Lick`:
+
+    var data []any
+    l := data<<42=99, 4>>-[!SelectFn]-[emit]
+
+The act of "emitting" the lick diverges the defined path from its original target, while allowing you
+to still `Yield()` from it if you hold the original `std.Lick` object.  To create a `std.Lick` you `std.Parse(anything)` -
+which can also intelligently _deserialize_ a lick from many input formats.  To _serialize_ a lick, you `Produce() any` it
+into an object structure which _can_ be serialized.
