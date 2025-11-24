@@ -3,7 +3,7 @@
 
 ---
 
-Next - we have another question
+I've got another question for you
 
 ### What are you looking for?
 
@@ -16,16 +16,19 @@ Luckily for us:
 
 In fact, it's so deeply rooted in software development that Darwin (the core of macOS) embraced the concept of swizzling
 from Objective-C during the late 1980s - and still uses it to this day!  The term, however, was coined by the graphical
-design community as a shorthand to quickly reference a set of vector values as such:
+design community as a shorthand for quickly referencing a set of vector values as such:
 
-    g, r, b, a = someVal.GRBA // Abstractly "swizzling" out green, red, blue, and then alpha
+    g, r, b, a = someVal.GRBA // Abstractly "swizzling" out green, red, blue, and THEN alpha
 
 What I'm trying to say is that, philosophically speaking, Humanity _in general_ has already brooded on this idea and
 dreamt for a better implementation of it since the dawn of computing.  The _Objective-C_ community wanted the ability to
 dynamically replace _methods_ at runtime - more colloquially, "monkey patching" - but the _graphical_ community wanted 
-the ability to merely mix up vectors in a minimal amount of text.
+the ability to merely mix up vectors in a minimal amount of text.  On the surface, they are _no different_ from one
+another - how do you dynamically replace a member at runtime, if you're aware of what it means to do so?
 
-Now - a `std.Path` (from another perspective) _is_ a vector of _mixed_ types - which makes it a prime candidate for swizzling =)
+A `std.Path` - from another perspective - _is_ a vector of _mixed_ types.   In Go, those types can _include_ method
+calls - meaning you could replace method calls _dynamically_ and without issue.  This makes it a prime candidate for 
+swizzling =)
 
 But what does it even mean to swizzle out **_anything!?_**
 
@@ -59,7 +62,7 @@ _But there's a better way!_
     ...
     []any {x, y, focused} = swizzle(w, X, Y, HasFocus())
 
-What I aim to introduce is a new keyword to Go - `swizzle` - which takes in several parameters.  The first is the
+I'd like to introduce you to a new Go keyword - `swizzle` - which takes in several parameters.  The first is the
 target to perform swizzling off of, and the remaining are a variadic of named identifiers.  If the identifier is
 simply _named,_ it's returned as is - including methods!  Meaning, if you'd like to _not_ invoke `HasFocus()` and
 return a callable _function_ to it - you can do exactly that
@@ -73,7 +76,7 @@ the boilerplate code it defines:
     // Your code:
     []any{x, y, focused} = swizzle(w, X, Y, HasFocus())
 
-    // The expanded code Go compiles behind the scenes:
+    // The psuedocode code Go compiles behind the scenes:
     x := w.X
     y := w.Y
     focused := w.HasFocus()
@@ -126,26 +129,29 @@ _Please_ digest the above!  This defines the general _concept_ of fluent motion!
 is a derivative of the above _six_ operations.
 
 A cursor, when implementing the `std.Cursor` interface, should _lazily enqueue_ the motion commands until a call to 
-`Yield()` - or, non-destructively return the current element it's located at using `Current()`.  The steps defined 
+`Yield()` - or, non-trackingly (a "peek") return the current element it's located at using `Current()`.  The steps defined 
 above, however, can be expressed in a much friendlier way - similar to index accessors, but in what I call the _"cursor 
 accessor"_ pattern.  Cursor accessors provide _compile time_ instructions for **intelligently** querying data.
 
-The cursor accessor is **entirely** a _syntactic sugar_ in implementation - **by design!**  There's no reason to
+The cursor accessor is **entirely** _syntactic sugar_ in implementation - **by design!**  There's no reason to
 re-invent the way we _loop_ through a data set - instead, we get to define how to logically _traverse_ it!
 
     tl;dr - a cursor logically selects data
 
 Think of it like a cursor in your IDE jumping around to 'select' blocks of code while processing it
 
+Cursor accessors and swizzling are baked into the version of Go which powers JanOS, but I eventually hope the 
+language might embrace this design and include it in for everyone to play with by default!
+
 Let's take a look at a few cursor accessors:
 
     data[[42]]    ← Jump(42)
-     data[42]     ← JumpTo(42)
+    data[42]      ← JumpTo(42)
     data[[42, 4]] ← Walk(42, 1)
-     data[42, 4]  ← WalkTo(42, 1)
+    data[42, 4]   ← WalkTo(42, 1)
 
-Cursor access is _no different_ from index accessors - it only _evolves_ the concept.  Before we get into
-the details of how, you'll notice we're missing two of our degrees of freedom!  The _Along_ operations 
+Cursor access _evolves_ the index accessor pattern without breaking its existing functionality.  Before we 
+get into the details of how, you'll notice we're missing two of our degrees of freedom!  The _Along_ operations 
 are implemented by _chaining_ the operations together:
 
     data[[42, 1]][[11]] ← Walk(42, 1) then Jump(11)
@@ -158,9 +164,9 @@ The next part of the cursor accessor is that it provides _three_ kinds of bracke
 
 **[ Square Brackets ]** - Panic when accessing outside the data's boundaries (traditional Go functionality)
 
-**| Pipe Brackets |** - Clamp the request to the nearest boundary gracefully
+**| Pipe Brackets |** - Clamp the movement to the nearest boundary gracefully
 
-**< Angle Brackets >** - Overflow the request to the other side of the data if out of bounds
+**< Angle Brackets >** - Over or underflow the movement to the other side of the data if out of bounds ("flowed" movement)
 
 When the brackets are _doubled-up_ that indicates every movement is _relative_ to the resulting position
 of the last operation (starting from an implicit '0' position) - facilitating _**fluent**_ motion.
@@ -179,9 +185,9 @@ of the last operation (starting from an implicit '0' position) - facilitating _*
     ||42, 4|| | Relative |      Clamp      | Walk(𝑖, 𝑠)
     <<42, 4>> | Relative | Over/Under Flow | Walk(𝑖, 𝑠)
 
-A wonderful feature of this is that _flowed_ access is similar to _tail indexing_ in Python!  If you'd like to grab
+A wonderful feature of this is that _"flowed"_ access is similar to _tail indexing_ in Python!  If you'd like to grab
 the last element, a call to `data<-1>` tells the system to yield the element -1 positions from 0 while
-observing underflowing.  At compile time, this evaluates as what you _intended:_
+observing underflowing.  At compile time, this evaluates to the _intention:_
 
     out := data[len(data)-1]
 
@@ -196,81 +202,107 @@ In addition, cursor accessors fully support _ranged_ access:
      [42:99, 4]  | Absolute |      Panic      | WalkTo(𝑖, 𝑠) - Similarly, just at a stride of 4
      |42:99, 4|  | Absolute |      Clamp      | WalkTo(𝑖, 𝑠) - Similarly, just at a stride of 4
      <42:99, 4>  | Absolute | Over/Under Flow | WalkTo(𝑖, 𝑠) - Similarly, just at a stride of 4
-    [[42:99]]    | Relative |      Panic      | Jump(𝑛) - Inclusively yield the relative elements starting from 42 away and then ending 99 away from that 
+    [[42:99]]    | Relative |      Panic      | Jump(𝑛) - Inclusively yield the relative elements starting from 42 away and then ending 99 away from that (panicking if out of bounds) 
     ||42:99||    | Relative |      Clamp      | Jump(𝑛) - Same as above, but stop when you reach the data's boundaries and return that element
     <<42:99>>    | Relative | Over/Under Flow | Jump(𝑛) - Same as above, but overflow or underflow at the data's boundaries
     [[42:99, 4]] | Relative |      Panic      | Walk(𝑖, 𝑠) - Similarly, just at a stride of 4
     ||42:99, 4|| | Relative |      Clamp      | Walk(𝑖, 𝑠) - Similarly, just at a stride of 4
     <<42:99, 4>> | Relative | Over/Under Flow | Walk(𝑖, 𝑠) - Similarly, just at a stride of 4
 
-Fluent relative motion can be, well, clunky at first!  Luckily, that's why you can _mix_ the brackets if you'd still like to 
-reference an absolute position instead.
+If you look closely at the doubled-up bracket operations, fluent relative motion can be, well, clunky - at 
+first!  Luckily, that's why you can _mix_ the brackets if you'd still like to reference an absolute position 
+instead.
 
-    // Walk(42, 4) and inclusively yield the elements from there to data[99] at a stride of 4
-    <<42:99, 4>
+    // Relatively walk 42 elements forward, then inclusively yield the elements to absolute element data[99] at a stride of 4
+    [[42:99, 4]
 
 Yes, this also means you can _mix the boundary functions!_
 
-    // Relatively walk 42 elements forward while over/underflowing the boundaries, then yield the 
-    // elements from there to data[99] while panicking if crossing the data's boundary -
-    // All at a stride of 4
+    // Relatively walk 42 elements forward while over/underflowing the boundaries, then yield the elements 
+    // from there to data[99] while panicking if crossing the data's boundary - all at a stride of 4
     <<42:99, 4]
     
 But you also have one additional feature - instead of a `:` you can use an `=` to indicate traversal of the range
 _"the long way 'round"_ - which is _exclusive_ of the provided points.  Think of it as a way of saying "please select 
-everything BUT the elements in this range" (a kind of "full outer join" in our SQL friends' terminology!)
+everything BUT the elements in this range" - a kind of "full outer join," in our SQL friends' terminology!
 
      Operation |   Mode   |  Out of Bounds  | Method
       [42=99]  | Absolute |      Panic      | JumpTo(𝑖) - PANIC!!! Infinity is undefined =)
       |42=99|  | Absolute |      Clamp      | JumpTo(𝑖) - From 42, tries to reach 99 through decrementing, but only yields [41, start] because it's clamped
       <42=99>  | Absolute | Over/Under Flow | JumpTo(𝑖) - Same as above, but underflows and continues to include [end, 100]
      [[42=99]] | Relative |      Panic      | JumpTo(𝑖) - PANIC!!! Infinity is undefined =)
-     ||42=99|| | Relative |      Clamp      | JumpTo(𝑖) - From the element 42 away, tries to reach the element 99 away through decrementing but clamps at 0 yielding [41, start]
-     <<42=99>  | Relative | Over/Under Flow | JumpTo(𝑖) - Same as above, but underflows and includes [end, 100]
-     <<42=99>> | Relative | Over/Under Flow | JumpTo(𝑖) - Same as above, but includes the region above the element 99 away from the element 42 away (remember: fluent motion!)
+     ||42=99|| | Relative |      Clamp      | JumpTo(𝑖) - From the element 42 away, tries to reach an element another 99 away through decrementing, but clamps at 0 - yielding [41, start]
+     <<42=99>  | Relative | Over/Under Flow | JumpTo(𝑖) - Same as above, but underflows and includes [end, 100] (NOTE: The single ending bracket!)
+     <<42=99>> | Relative | Over/Under Flow | JumpTo(𝑖) - Same as above, but includes the region above the element 99 away from the element 42 away, instead (remember: fluent motion!)
 
 **Order Matters!**
 
-Cursoring implies _directionality_ of travel - especially with _fluent_ motion!  
+Cursoring implies _directionality_ of travel - especially with _fluent_ motion!  That means that `[44:22]` will
+yield the elements _starting_ at 42 and _stopping_ at 22 _**in descending order**._
 
-If underflowing, the elements will be returned in the order the cursor _traveled_ through the data!
-
-Because this is just a kind of 'syntactic sugar', _you can use variables as your operands!_  That means you can define 
+Because this is just a kind of 'syntactic sugar', you can also use _**variables**_ as your operands!  That means you can define 
 the relative motion of how to _dynamically_ "select" a region of space - without reflection and entirely through compiled 
-code =)
+code.  Earlier I emphasized this is a form of _**intelligent**_ querying, and that's exactly what I meant:
 
-But we haven't even gotten to the _**coolest**_ part - _predicates!_
+    fn := func() (i int) { 
+        ... // Calculate an index
+        return i
+    }
+    v := data[42:fn, 4] // Walk from element 42 to the -runtime- result of 'fn()' at a stride of 4
 
-These are functions that get called _**during traversal**_ to mutate or filter the data.
+But we haven't even gotten to the _**coolest**_ part, yet - _predicates!_  These are functions that get called with
+each element _**during traversal**_ to either mutate or filter it.  At any point in a chain, you can insert a trinity
+of functions for how to process the _currently enqueued_ movements.
 
-    // A query with predicates
-    [22, nil, SelectFnA][42:99, 4, SelectFnB][TransformFn, ForEachFn]
-    |←             Filtration              →||←     Processing     →|
+    // Cursor access with predicates
+    [22]-[42:99, 4]-[SelectFn, ForEachFn, TransformFn]
 
-    // A SelectFn Signature
-    func(T) bool
-    
-    // A TransformFn Signature
-    func[TOut any](T) TOut
+    // A SelectFn Signature - returns true to 'include' the element
+    func(T) bool 
 
     // A ForEachFn Signature
     func(T)
+    
+    // A TransformFn Signature - returns a mutated version of the element
+    func[TOut any](T) TOut
 
-Each operation can be provided a _SelectFn_ (which may be omitted or be `nil`).  A select function can be used to 
-_filter_ the data by returning `true` or `false` to selectively include the element.
+Any of the functions can be provided `nil` to be ignored, or omitted entirely.  These functions are called
+_during traversal,_ meaning the aspect of _distinctness_ has to be addressed.  During a single movement,
+it's not possible to visit an element twice - but _chained_ movements absolutely can.  By default, the predicate
+functions are called _on every single visitation of an element._  With selection, this means you could produce
+a data set with duplicate elements - _by design!_  If, instead, you'd like your predicates to be visited
+'distinctly' (in SQL terminology), simply prefix those you wish to do so with a `!` character.
 
-After all movement operations have been defined, a _final_ operation may be presented with _two functions._  Each 
-may be omitted (or be provided `nil`) or be given an appropriate function signature. 
+    // Cursor access with distinct predicates
+    [22]-[42:99, 4]-[!SelectFn, ForEachFn, !TransformFn]
 
-A _TransformFn_ is used to _mutate_ the elements into a different output type.  Transformation happens _during_ 
-traversal, meaning each element will only ever be transformed _on the first visit._  That being said, you may
-still want to perform a transformation _on every visitation_ - if so, simply _prefix_ the signature with a `~`
-character.  For example:
+If a _TransformFn_ is present, the output type of the chain _from that point on_ changes from `T` to `TOut` (as 
+defined on the provided function signature).
 
-    <<42:11, 1>>[~MutateOnEveryVisit]
+All predicate function _**parameters**_ can be presented in one of four ways.    
 
-If a _TransformFn_ is present, the output type of the entire chain changes from `T` to `TOut` (as defined on the
-provided function signature).
+    // A ForEachFn with an anonymously typed function signature
+    printer := func(element any) {
+        fmt.PrintLn(element)
+    }
 
-If you'd like to just have a function called _for every element_ (regardless of prior visitation) - you may
-provide a _ForEachFn_ which just receives the element.
+    // A ForEachFn with a typed function signature matching the data set
+    printer := func(element MyType) {
+        fmt.PrintLn(element)
+    }
+
+    // ForEachFns with a variadic of either
+    printer := func(element ...any) {
+        fmt.PrintLn(element[0])
+    }
+    printer := func(element ...MyType) {
+        fmt.PrintLn(element[0])
+    }
+
+While I show _ForEachFns_ in the above example, the same _**parameter**_ aspect applies to _any_ of the predicate
+function signatures.
+
+Predicates, in the sense of a `std.Cursor`, represent a call to `Yield()` - providing a new data set for the next
+movement operations to be chained off of.  You can chain as many of these operations together as you'd like:
+
+    [42]-[SelectFn]-<<:99, 4>>-|11|-[nil, nil, Transform[int]] // Ultimately yields an 'int' type
