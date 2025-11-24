@@ -1,4 +1,4 @@
-# `E0S0 - Swizzling Licks`
+# `E0S0 - Parselcode`
 ### `Alex Petz, Ignite Laboratories, November 2025`
 
 ---
@@ -7,32 +7,35 @@ I've got another question for you
 
 ### What are you looking for?
 
-Most of the time, you can glean what you need from the data - but you might need it in a different logical _order,
-type,_ or even to be _translated!_
+A color?  A function?  Index 42?
+
+What if I told you that's not such a simple question to _communicate_ between **_programs?_**
+
+_Sending_ something like a color or index 42 is pretty standard - but sending _how_ to derive 
+a color (a function) _**isn't.**_
+
+Asking another program to "call this function and then give me the result of index 42" is a
+_composite operation_ which requires a way to _serialize_ it over the wire.
 
 Luckily for us:
 
 **This isn't a new issue!**
 
 In fact, it's so deeply rooted in software development that Darwin (the core of macOS) embraced the concept of swizzling
-from Objective-C during the late 1980s - and still uses it to this day!  The term, however, was coined by the graphical
-design community as a shorthand for quickly referencing a set of vector values as such:
+from Objective-C to solve _exactly_ this - and still uses it to this day!  In their world, swizzling is a way of dynamically
+changing methods at runtime - the term, however, was coined by the graphical design engineers as a shorthand for quickly 
+referencing a set of vector values as such:
 
     g, r, b, a = someVal.GRBA // Abstractly "swizzling" out green, red, blue, and THEN alpha
 
-What I'm trying to say is that, philosophically speaking, Humanity _in general_ has already brooded on this idea and
-dreamt for a better implementation of it since the dawn of computing.  The _Objective-C_ community wanted the ability to
-dynamically replace _methods_ at runtime - more colloquially, "monkey patching" - but the _graphical_ community wanted 
-the ability to merely mix up vectors in a minimal amount of text.  On the surface, they are _no different_ from one
-another - how do you dynamically replace a member at runtime, if you're aware of what it means to do so?
+What I'm saying is that, philosophically speaking, _this is well tread territory!_  My implementation is only _**one way**_
+of achieving what _many_ have already succeeded at to varying degrees.  Because of that, I aim to ensure I describe this
+as openly and pedagogically as I can - as that would be the only reason anyone would ever consider learning _my_ implementation.
 
-A `std.Path` - from another perspective - _is_ a vector of _mixed_ types.   In Go, those types can _include_ method
-calls - meaning you could replace method calls _dynamically_ and without issue.  This makes it a prime candidate for 
-swizzling =)
+So, what does it even mean to swizzle out **_anything!?_**
 
-But what does it even mean to swizzle out **_anything!?_**
-
-Well, let's say you'd quickly like to build a tuple of a window's coordinates and whether the window has focus - traditionally, this would be your code:
+Well, let's say you'd quickly like to build a tuple of a window's coordinates and whether the window has focus.  Assuming
+you don't want to expose the Window object, this would traditionally be your code:
 
     type CustomTuple struct {
         X uint
@@ -40,9 +43,9 @@ Well, let's say you'd quickly like to build a tuple of a window's coordinates an
         Focused bool
     }
 
-    func (w *Window) Detail() Tuple {
+    func (w *Window) Detail() CustomTuple {
         ...
-        return Tuple {
+        return CustomTuple {
             X: w.X,
             Y: w.Y,
             Focused: w.HasFocus(),
@@ -52,11 +55,17 @@ Well, let's say you'd quickly like to build a tuple of a window's coordinates an
 While that may appear _benign,_ let's consider the implications:
 
     0. A new type named "CustomTuple" has been introduced
-    1. You still have to explicitly call each component to address it on a separate line
-    2. The "Detail()" method must exist to access the Tuple type
-    3. Every ad-hoc "tuple" you make needs a self-descriptive name and must be maintained
+    1. Multiple field access is still a multi-line operation
+    2. The "Detail()" method must exist to populate the Tuple type
+    3. Everyone else must reference CustomTuple forever
 
-_But there's a better way!_
+Out of a desire not to expose the entire `Window` type, a descriptive structure is borne. 
+
+_Instead, what if you could just ask for "X" and "Y" from **any** object?_
+
+We begin a three-part process:
+
+### 0 - swizzle
 
     var w *Window
     ...
@@ -95,10 +104,7 @@ Most importantly, however, you can still use _index accessors_ in the swizzling 
     var data []any
     []any{first, second, third} = swizzle(data, [0], [1], [2])
 
-This is critical because a `std.Path` literally _is_ a `[]any` - meaning you could replicate the concept of "monkey
-patching" by essentially "remixing" the steps of a path.  
-
-In that same vein, the parameters _aren't_ required to be members of the **target!**
+The parameters, also, _aren't_ required to be members of the **target!**
 
     var pixel Pixel
     var w *Window
@@ -111,7 +117,7 @@ circumstances, you could create a local variable to rename access to the desired
 
 This is a _very powerful pattern,_ when you combine it with the next topic -
 
-### Six Degrees of Semantic Freedom
+### 1 - Six Degrees of Semantic Freedom
 
 JanOS also implements one other majorly important feature: the _cursor!_  A cursor is anything that implements
 the `std.Cursorable` interface - which literally defines _six_ degrees of semantic freedom, broken into two
@@ -312,9 +318,34 @@ Finally, a special operation is reserved for _emitting_ the LIQ as a `liq.Lick`:
     var data []any
     l := data<<42=99, 4>>-[!SelectFn]-[emit]
 
-The act of "emitting" the lick diverges the defined path from its original target, while allowing you
-to still `Yield()` from it if you hold the original `liq.Lick` object.  To create a `liq.Lick` you `liq.Parse(anything)` -
-which can also intelligently _deserialize_ a lick from many input formats.  To _serialize_ a lick, you `Produce() any` it
-into an object structure which _can_ be serialized.
+A `liq.Lick` provides you with two operations:
+
+    l := data<<42=99, 4>>-[!SelectFn]-[emit]
+
+    l.Yield() // Re-invoke the LIQ on-demand
+    l.Produce() // Outputs the liq as a serializable structure
+
+If you retain the _original_ `liq.Lick` it can still optimize its execution path - but once "produced"
+into a serializable structure, reflection may be relied upon to repeat the same steps.
 
 The `liq` package holds all of the serializeable types that represent different steps in your query =)
+
+### 2 - parse and parsel
+
+The _reason_ for **[emit]** is to convert a LIQ expression into a replicable set of steps - but what
+if you want to replicate a _method chain?_  That's where the final two keywords come into play:
+
+    l := parse(myMap["42"].Execute().SomeField)
+
+The `parse` keyword takes an _expression_ or _statement_ and yields a `liq.Lick` that can serialize
+_how_ to re-execute those steps.  `parse` can even process cursor accessor statements or a `swizzle`
+operation.
+
+    l := parse(swizzle(pixel, G, R, A, B))
+
+As this is a very, well, _terse_ statement - the final keyword simply combines the two:
+
+    // A combined parse(swizzle(target, members...))
+    l := parsel(pixel, G, R, A, B)
+
+With these concepts, we form the basis of imbuing Go with _**homoiconicity**_ =)
