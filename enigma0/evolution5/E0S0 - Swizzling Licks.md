@@ -307,12 +307,14 @@ movement operations to be chained off of.  You can chain as many of these operat
 
     [42]-[SelectFn]-<<:99, 4>>-|11|-[nil, nil, Transform[int]] // Ultimately yields an 'int' type
 
-Finally, a special operation is reserved for _emitting_ the LIQ as a `std.Lick`:
+Finally, a special operation is reserved for _emitting_ the LIQ as a `liq.Lick`:
 
     var data []any
     l := data<<42=99, 4>>-[!SelectFn]-[emit]
 
 The act of "emitting" the lick diverges the defined path from its original target, while allowing you
-to still `Yield()` from it if you hold the original `std.Lick` object.  To create a `std.Lick` you `std.Parse(anything)` -
+to still `Yield()` from it if you hold the original `liq.Lick` object.  To create a `liq.Lick` you `liq.Parse(anything)` -
 which can also intelligently _deserialize_ a lick from many input formats.  To _serialize_ a lick, you `Produce() any` it
 into an object structure which _can_ be serialized.
+
+The `liq` package holds all of the serializeable types that represent different steps in your query =)
